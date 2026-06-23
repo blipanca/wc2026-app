@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WC 2026 — Analytics Dashboard</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --red:#CC0000;--green:#16a34a;--blue:#1d6fce;--amber:#b45309;
+  --bg:#f4f4f5;--card:#fff;--border:#e4e4e7;
+  --text:#18181b;--text2:#71717a;--text3:#a1a1aa;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#0f0f0f;--card:#1c1c1e;--border:#2c2c2e;
+  --text:#f4f4f5;--text2:#a1a1aa;--text3:#52525b;
+}}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* ── Config banner ─────────────────────────────────────────── */
+.config-banner{background:var(--amber);color:#fff;padding:12px 20px;font-size:13px;display:none;align-items:center;gap:10px}
+.config-banner a{color:#fff;font-weight:700;text-decoration:underline}
+
+/* ── Header ────────────────────────────────────────────────── */
+.header{background:var(--red);padding:16px 20px;display:flex;align-items:center;justify-content:space-between}
+.header-left h1{font-size:18px;font-weight:700;color:#fff;display:flex;align-items:center;gap:8px}
+.header-left p{font-size:11px;color:rgba(255,255,255,.75);margin-top:3px}
+.refresh-btn{padding:8px 16px;background:rgba(255,255,255,.2);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;transition:background .15s}
+.refresh-btn:hover{background:rgba(255,255,255,.3)}
+.refresh-btn:disabled{opacity:.6;cursor:default}
+
+/* ── Config section ────────────────────────────────────────── */
+.config-section{background:var(--card);border-bottom:0.5px solid var(--border);padding:16px 20px}
+.config-title{font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+.config-row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+.config-field{flex:1;min-width:200px}
+.config-field label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px;font-weight:500}
+.config-field input{width:100%;padding:8px 11px;border:0.5px solid var(--border);border-radius:8px;font-size:13px;background:var(--bg);color:var(--text);font-family:inherit;outline:none}
+.config-field input:focus{border-color:var(--blue);box-shadow:0 0 0 2px rgba(29,111,206,.15)}
+.save-btn{padding:9px 18px;background:var(--blue);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap}
+.save-btn:hover{opacity:.88}
+
+/* ── Main content ──────────────────────────────────────────── */
+.main{max-width:960px;margin:0 auto;padding:20px}
+.last-update{font-size:11px;color:var(--text3);text-align:right;margin-bottom:14px;min-height:16px}
+
+/* ── KPI grid ──────────────────────────────────────────────── */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:18px}
+.kpi{background:var(--card);border:0.5px solid var(--border);border-radius:12px;padding:16px}
+.kpi-value{font-size:30px;font-weight:700;line-height:1;margin-bottom:5px}
+.kpi-label{font-size:12px;color:var(--text2);font-weight:500}
+.kpi-sub{font-size:11px;color:var(--text3);margin-top:3px}
+.kpi.red   .kpi-value{color:var(--red)}
+.kpi.green .kpi-value{color:var(--green)}
+.kpi.blue  .kpi-value{color:var(--blue)}
+.kpi.amber .kpi-value{color:var(--amber)}
+
+/* ── Cards ─────────────────────────────────────────────────── */
+.card-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+@media(max-width:600px){.card-grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:0.5px solid var(--border);border-radius:12px;padding:16px}
+.card-title{font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px}
+.card.full{grid-column:1/-1}
+
+/* ── Bar chart ─────────────────────────────────────────────── */
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:9px}
+.bar-label{font-size:12px;width:80px;flex-shrink:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.bar-track{flex:1;height:22px;background:var(--bg);border-radius:5px;overflow:hidden;position:relative}
+.bar-fill{height:100%;border-radius:5px;display:flex;align-items:center;justify-content:flex-end;padding-right:7px;min-width:0;transition:width .5s cubic-bezier(.4,0,.2,1)}
+.bar-num{font-size:11px;font-weight:700;color:#fff;white-space:nowrap}
+.bar-num.dark{color:var(--text);position:absolute;left:calc(100% + 6px);top:4px}
+
+/* ── Table ─────────────────────────────────────────────────── */
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{padding:7px 10px;text-align:left;color:var(--text3);font-weight:600;font-size:11px;border-bottom:0.5px solid var(--border);text-transform:uppercase;letter-spacing:.05em}
+.tbl th.r{text-align:right}
+.tbl td{padding:9px 10px;border-bottom:0.5px solid var(--border)}
+.tbl td.r{text-align:right;font-weight:600}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:rgba(0,0,0,.02)}
+
+/* ── Badges ────────────────────────────────────────────────── */
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;margin-left:6px}
+.badge.today{background:rgba(22,163,74,.12);color:var(--green)}
+.badge.yesterday{background:rgba(161,161,170,.12);color:var(--text3)}
+
+/* ── Info box ──────────────────────────────────────────────── */
+.info-box{background:rgba(29,111,206,.06);border:0.5px solid rgba(29,111,206,.2);border-radius:10px;padding:14px;font-size:12px;color:var(--text2);line-height:1.7;margin-top:14px}
+.info-box strong{color:var(--text)}
+
+/* ── Empty / loading ───────────────────────────────────────── */
+.empty{text-align:center;padding:28px 16px;color:var(--text3)}
+.empty svg{display:block;margin:0 auto 10px;opacity:.35}
+.empty p{font-size:13px}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;vertical-align:-3px;margin-right:4px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.not-configured{text-align:center;padding:40px 20px;color:var(--text2)}
+.not-configured h2{font-size:20px;margin-bottom:10px;color:var(--text)}
+.not-configured p{font-size:14px;line-height:1.7;max-width:480px;margin:0 auto}
+.step-list{text-align:left;max-width:480px;margin:16px auto;background:var(--card);border:0.5px solid var(--border);border-radius:12px;padding:16px}
+.step{display:flex;gap:10px;margin-bottom:10px;font-size:13px;line-height:1.5}
+.step:last-child{margin-bottom:0}
+.step-num{width:24px;height:24px;border-radius:50%;background:var(--red);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+code{background:var(--bg);border:0.5px solid var(--border);border-radius:4px;padding:1px 5px;font-size:12px;font-family:monospace}
+</style>
+</head>
+<body>
+
+<div class="config-banner" id="configBanner">
+  ⚠️ Belum dikonfigurasi — masukkan Supabase URL dan API Key di bawah untuk mulai tracking.
+</div>
+
+<div class="header">
+  <div class="header-left">
+    <h1>📊 WC 2026 Analytics</h1>
+    <p>Visitor tracking — FIFA World Cup 2026 App</p>
+  </div>
+  <button class="refresh-btn" onclick="loadData()" id="refreshBtn">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+    Refresh
+  </button>
+</div>
+
+<!-- Config section -->
+<div class="config-section">
+  <div class="config-title">🔧 Konfigurasi Supabase</div>
+  <div class="config-row">
+    <div class="config-field">
+      <label>Supabase Project URL</label>
+      <input type="url" id="cfgUrl" placeholder="https://xyzabcdef.supabase.co" autocomplete="off">
+    </div>
+    <div class="config-field">
+      <label>Anon Public Key</label>
+      <input type="text" id="cfgKey" placeholder="eyJhbGciOiJI..." autocomplete="off">
+    </div>
+    <button class="save-btn" onclick="saveConfig()">Simpan & Muat</button>
+  </div>
+  <div id="cfgStatus" style="font-size:12px;margin-top:8px;color:var(--text3)"></div>
+</div>
+
+<div class="main">
+  <div class="last-update" id="lastUpdate">—</div>
+  <div id="dashContent"></div>
+</div>
+
+<script src="config.js"></script>
+<script>
+// ── Config management ─────────────────────────────────────────────────────
+const CFG_KEY_URL = 'wc2026_supa_url';
+const CFG_KEY_KEY = 'wc2026_supa_key';
+
+function getConfig() {
+  // Prioritas 1: config.js (APP_CONFIG)
+  if (typeof APP_CONFIG !== 'undefined' && APP_CONFIG.supabaseUrl && APP_CONFIG.supabaseKey) {
+    return { url: APP_CONFIG.supabaseUrl.trim().replace(/\/$/, ''), key: APP_CONFIG.supabaseKey.trim(), fromFile: true };
+  }
+  // Prioritas 2: localStorage (dari form di bawah)
+  return {
+    url: localStorage.getItem(CFG_KEY_URL) || '',
+    key: localStorage.getItem(CFG_KEY_KEY) || '',
+    fromFile: false
+  };
+}
+
+function saveConfig() {
+  const url = document.getElementById('cfgUrl').value.trim().replace(/\/$/, '');
+  const key = document.getElementById('cfgKey').value.trim();
+  if (!url || !key) {
+    document.getElementById('cfgStatus').textContent = '⚠️ URL dan Key wajib diisi.';
+    return;
+  }
+  localStorage.setItem(CFG_KEY_URL, url);
+  localStorage.setItem(CFG_KEY_KEY, key);
+  document.getElementById('cfgStatus').textContent = '✅ Tersimpan — memuat data...';
+  loadData();
+}
+
+function loadConfigUI() {
+  const cfg = getConfig();
+  document.getElementById('cfgUrl').value = cfg.url;
+  document.getElementById('cfgKey').value = cfg.key;
+  if (cfg.fromFile) {
+    document.getElementById('cfgStatus').textContent = '✅ Konfigurasi dari config.js — siap digunakan';
+    document.getElementById('configBanner').style.display = 'none';
+  } else if (!cfg.url || !cfg.key) {
+    document.getElementById('configBanner').style.display = 'flex';
+  }
+}
+
+// ── Supabase helpers ─────────────────────────────────────────────────────────
+async function supaFetch(path, cfg) {
+  const res = await fetch(cfg.url + path, {
+    headers: {
+      'apikey':         cfg.key,
+      'Authorization': 'Bearer ' + cfg.key,
+    },
+  });
+  if (!res.ok) throw new Error('HTTP ' + res.status + ' ' + res.statusText);
+  return res.json();
+}
+
+// ── Load & render ────────────────────────────────────────────────────────────
+async function loadData() {
+  const cfg = getConfig();
+  const btn = document.getElementById('refreshBtn');
+  btn.innerHTML = '<span class="spinner"></span>Loading...';
+  btn.disabled = true;
+
+  if (!cfg.url || !cfg.key) {
+    renderNotConfigured();
+    btn.innerHTML = refreshIcon() + ' Refresh';
+    btn.disabled = false;
+    return;
+  }
+
+  try {
+    // Parallel fetch: summary + daily + timezone
+    const [summary, daily, byTz] = await Promise.all([
+      supaFetch('/rest/v1/visits_summary?select=*', cfg),
+      supaFetch('/rest/v1/visits_daily?select=*&order=date_key.desc', cfg),
+      supaFetch('/rest/v1/visits_by_timezone?select=*&order=total_visits.desc', cfg),
+    ]);
+
+    const s = summary[0] || {};
+    renderDashboard(s, daily, byTz);
+
+    document.getElementById('lastUpdate').textContent =
+      'Diperbarui: ' + new Date().toLocaleString('id-ID') +
+      (s.last_visit_ever ? ' · Kunjungan terakhir: ' + new Date(s.last_visit_ever).toLocaleString('id-ID') : '');
+    const cfg2 = getConfig();
+  document.getElementById('cfgStatus').textContent = cfg2.fromFile
+    ? '✅ Terhubung ke Supabase (via config.js)'
+    : '✅ Terhubung ke Supabase (via localStorage)';
+    document.getElementById('configBanner').style.display = 'none';
+
+  } catch (err) {
+    document.getElementById('dashContent').innerHTML = `
+      <div class="empty">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <p><strong>Gagal terhubung ke Supabase</strong><br>${err.message}<br><br>Periksa URL dan API Key Anda.</p>
+      </div>`;
+    document.getElementById('cfgStatus').textContent = '❌ ' + err.message;
+  }
+
+  btn.innerHTML = refreshIcon() + ' Refresh';
+  btn.disabled = false;
+}
+
+function refreshIcon() {
+  return '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>';
+}
+
+function renderDashboard(summary, daily, byTz) {
+  const today     = new Date().toISOString().split('T')[0];
+  const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+
+  const todayRow = daily.find(d => d.date_key === today);
+  const yestRow  = daily.find(d => d.date_key === yesterday);
+
+  const totalVisits  = parseInt(summary.total_visits      || 0);
+  const uniqueSess   = parseInt(summary.unique_sessions   || 0);
+  const activeDays   = parseInt(summary.active_days       || 0);
+  const todayVisits  = parseInt(todayRow?.total_visits     || 0);
+  const yestVisits   = parseInt(yestRow?.total_visits      || 0);
+
+  // Trend indicator
+  const trend = todayVisits > yestVisits ? '↑' : todayVisits < yestVisits ? '↓' : '→';
+  const trendColor = todayVisits > yestVisits ? 'var(--green)' : todayVisits < yestVisits ? 'var(--red)' : 'var(--text3)';
+
+  // Last 7 days for chart
+  const last7 = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(Date.now() - i * 86400000).toISOString().split('T')[0];
+    const row = daily.find(x => x.date_key === d);
+    last7.push({ date: d, count: parseInt(row?.total_visits || 0), unique: parseInt(row?.unique_sessions || 0) });
+  }
+
+  let html = `
+    <div class="kpi-grid">
+      <div class="kpi red">
+        <div class="kpi-value">${totalVisits.toLocaleString('id-ID')}</div>
+        <div class="kpi-label">Total Kunjungan</div>
+        <div class="kpi-sub">${uniqueSess.toLocaleString('id-ID')} sesi unik</div>
+      </div>
+      <div class="kpi green">
+        <div class="kpi-value">${todayVisits} <span style="font-size:16px;color:${trendColor}">${trend}</span></div>
+        <div class="kpi-label">Hari Ini</div>
+        <div class="kpi-sub">vs ${yestVisits} kemarin${todayVisits===0?' · belum ada kunjungan':''}</div>
+      </div>
+      <div class="kpi blue">
+        <div class="kpi-value">${activeDays}</div>
+        <div class="kpi-label">Hari Aktif</div>
+        <div class="kpi-sub">sejak pertama kali dibuka</div>
+      </div>
+      <div class="kpi amber">
+        <div class="kpi-value">${totalVisits > 0 ? Math.round(totalVisits / Math.max(activeDays, 1)) : 0}</div>
+        <div class="kpi-label">Rata-rata/Hari</div>
+        <div class="kpi-sub">kunjungan per hari aktif</div>
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">📅 7 Hari Terakhir</div>
+        ${renderBarChart(last7, d => {
+          const dt = new Date(d.date + 'T12:00:00');
+          return dt.toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric', month: 'short' });
+        }, d => d.count, '#CC0000')}
+      </div>
+      <div class="card">
+        <div class="card-title">🌏 Per Timezone</div>
+        ${renderBarChart(byTz, d => d.timezone, d => parseInt(d.total_visits), '#1d6fce')}
+      </div>
+    </div>
+
+    <div class="card full">
+      <div class="card-title">📋 Riwayat Lengkap per Hari</div>
+      ${renderTable(daily, today, yesterday)}
+    </div>
+
+    <div class="info-box">
+      <strong>📊 Cara membaca dashboard ini:</strong><br>
+      • <strong>Total Kunjungan</strong> = jumlah sesi unik yang membuka app (bukan page view)<br>
+      • <strong>Deduplikasi 30 menit</strong> — refresh atau buka ulang dalam 30 mnt tidak dihitung lagi<br>
+      • <strong>Bar "—"</strong> = belum ada kunjungan di hari tersebut (normal untuk hari sebelum app dibuka)<br>
+      • Data <strong>anonim sepenuhnya</strong> — hanya tanggal + timezone + session ID acak. Tidak ada IP, nama, atau data pribadi.<br>
+      • Export data: Supabase Dashboard → Table Editor → <em>visits</em> → Download CSV<br>
+      • Dashboard auto-refresh setiap 60 detik.
+    </div>`;
+
+  document.getElementById('dashContent').innerHTML = html;
+}
+
+function renderBarChart(items, labelFn, valueFn, color) {
+  if (!items?.length) return emptyMsg('Belum ada data');
+  const maxVal = Math.max(...items.map(valueFn), 1);
+  const hasData = items.some(i => valueFn(i) > 0);
+  if (!hasData) return emptyMsg('Belum ada kunjungan');
+
+  return items.map(item => {
+    const val   = valueFn(item);
+    const label = labelFn(item);
+    const pct   = val > 0 ? Math.max(Math.round((val / maxVal) * 100), 4) : 0;
+    const showInside = pct > 20;
+    if (val === 0) {
+      return `
+        <div class="bar-row">
+          <span class="bar-label" title="${label}">${label}</span>
+          <div class="bar-track" style="display:flex;align-items:center">
+            <span style="font-size:11px;color:var(--text3);padding-left:6px">—</span>
+          </div>
+        </div>`;
+    }
+    return `
+      <div class="bar-row">
+        <span class="bar-label" title="${label}">${label}</span>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:${pct}%;background:${color}">
+            ${showInside ? `<span class="bar-num">${val}</span>` : ''}
+          </div>
+          ${!showInside ? `<span class="bar-num dark" style="left:calc(${pct}% + 6px)">${val}</span>` : ''}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function renderTable(daily, today, yesterday) {
+  if (!daily?.length) return emptyMsg('Belum ada data');
+  const rows = daily.map((row, i) => {
+    const dt = new Date(row.date_key + 'T12:00:00');
+    const label = dt.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    const badge = row.date_key === today     ? '<span class="badge today">Hari ini</span>'
+                : row.date_key === yesterday ? '<span class="badge yesterday">Kemarin</span>' : '';
+    const first = new Date(row.first_visit).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+    const last  = new Date(row.last_visit).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+    return `<tr>
+      <td>${i + 1}</td>
+      <td>${label}${badge}</td>
+      <td class="r">${parseInt(row.total_visits).toLocaleString('id-ID')}</td>
+      <td class="r">${parseInt(row.unique_sessions).toLocaleString('id-ID')}</td>
+      <td style="font-size:12px;color:var(--text3)">${first} – ${last}</td>
+    </tr>`;
+  }).join('');
+  return `<table class="tbl">
+    <thead><tr>
+      <th>#</th><th>Tanggal</th>
+      <th class="r">Kunjungan</th><th class="r">Sesi Unik</th>
+      <th>Jam Aktif</th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+}
+
+function emptyMsg(msg) {
+  return `<div class="empty" style="padding:16px">
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+    <p style="font-size:12px;margin-top:6px">${msg}</p>
+  </div>`;
+}
+
+function renderNotConfigured() {
+  document.getElementById('dashContent').innerHTML = `
+    <div class="not-configured">
+      <h2>🔧 Belum Dikonfigurasi</h2>
+      <p>Masukkan Supabase URL dan API Key di atas untuk mulai melihat data kunjungan.</p>
+      <div class="step-list">
+        <div class="step"><div class="step-num">1</div><div>Buat project gratis di <a href="https://supabase.com" target="_blank" style="color:var(--blue)">supabase.com</a> (tidak perlu kartu kredit)</div></div>
+        <div class="step"><div class="step-num">2</div><div>Buka <strong>SQL Editor</strong> → jalankan file <code>supabase_setup.sql</code> yang sudah disertakan</div></div>
+        <div class="step"><div class="step-num">3</div><div>Buka <strong>Settings → API</strong> → salin <em>Project URL</em> dan <em>anon public key</em></div></div>
+        <div class="step"><div class="step-num">4</div><div>Tempel kedua nilai tersebut di form konfigurasi di atas, lalu klik <strong>Simpan & Muat</strong></div></div>
+        <div class="step"><div class="step-num">5</div><div>Buka file <code>config.js</code>, isi <code>supabaseUrl</code> dan <code>supabaseKey</code> — berlaku otomatis untuk <strong>index.html</strong> dan <strong>analytics.html</strong> sekaligus. Upload ulang ke Netlify.</div></div>
+      </div>
+    </div>`;
+}
+
+// ── Init ─────────────────────────────────────────────────────────────────────
+loadConfigUI();
+loadData();
+setInterval(loadData, 60 * 1000); // auto-refresh tiap 60 detik
+</script>
+</body>
+</html>
