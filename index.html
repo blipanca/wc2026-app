@@ -1103,6 +1103,14 @@ function mergeOpenFootballData(matches){
 
 // ── Hitung Top Scorer langsung dari OPENFOOTBALL_GOALS (nama lengkap asli,
 //    own goal otomatis dikecualikan, tanpa perlu parsing string apapun) ──
+
+// Compare two player names: match if either name's last word matches the other's
+function sameNamePerson(nameA, nameB){
+  if(nameA === nameB) return true;
+  const lastA = nameA.trim().split(/\s+/).pop().toLowerCase();
+  const lastB = nameB.trim().split(/\s+/).pop().toLowerCase();
+  return lastA === lastB || nameA.toLowerCase().includes(lastB) || nameB.toLowerCase().includes(lastA);
+}
 function computeTopScorersFromGoals(){
   const tally = {};
   for(const g of OPENFOOTBALL_GOALS){
@@ -1609,13 +1617,6 @@ function renderStats(){
     : parseScorersToStats();
 
   // Bandingkan dua nama: cocok jika salah satu adalah substring kata-terakhir yang lain
-  const sameNamePerson = (nameA, nameB) => {
-    if(nameA === nameB) return true;
-    const lastA = nameA.trim().split(/\s+/).pop().toLowerCase();
-    const lastB = nameB.trim().split(/\s+/).pop().toLowerCase();
-    return lastA === lastB || nameA.toLowerCase().includes(lastB) || nameB.toLowerCase().includes(lastA);
-  };
-
   const findAssist = (autoName) => {
     const match = PLAYER_STATS.find(p => p.assists > 0 && sameNamePerson(p.name, autoName));
     return match ? match.assists : 0;
@@ -2273,9 +2274,32 @@ function getPlayerProfile(name){
   return PLAYER_PROFILES[name] || null;
 }
 
+
+function findAssistGlobal(autoName){
+  const match = PLAYER_STATS.find(p => p.assists > 0 && sameNamePerson(p.name, autoName));
+  return match ? match.assists : 0;
+}
 function openPlayerModal(name, teamName){
   const profile = getPlayerProfile(name);
-  const p = PLAYER_STATS.find(x=>x.name===name);
+  // Sumber gol: live data (OPENFOOTBALL_GOALS) jika tersedia — sinkron dengan
+  // Top Scorer list. Fallback ke PLAYER_STATS statis hanya jika live kosong.
+  let p = null;
+  if(OPENFOOTBALL_GOALS.length > 0){
+    const liveGoals = computeTopScorersFromGoals();
+    const liveMatch = liveGoals.find(x => sameNamePerson(x.name, name));
+    if(liveMatch){
+      p = {
+        name: liveMatch.name,
+        team: liveMatch.team,
+        flag: autoFlagForTeam(liveMatch.team),
+        pos: liveMatch.pos,
+        goals: liveMatch.goals,
+        assists: findAssistGlobal(liveMatch.name),
+        mins: liveMatch.mins
+      };
+    }
+  }
+  if(!p) p = PLAYER_STATS.find(x=>sameNamePerson(x.name, name));
   const tf = flag(teamName) || '🏳';
 
   let h = `<div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">
