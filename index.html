@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="WC 2026">
-<meta name="description" content="Live scores, jadwal, standings, prediksi FIFA World Cup 2026">
+<meta name="description" content="Live scores, jadwal, standings, predictions FIFA World Cup 2026">
 <link rel="manifest" href="manifest.json">
 <style>
 /* ════════════════════════════════════════════════════════════
@@ -445,7 +445,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
     </div>
     <div class="status-bar" id="statusBar"><span id="statusMsg"></span></div>
     <div class="pwa-banner" id="pwaBanner">
-      <div><div class="pwa-banner-text">📲 Aktifkan Notifikasi HP</div><div class="pwa-banner-sub">Notif 30 mnt sebelum pertandingan</div></div>
+      <div><div class="pwa-banner-text">📲 Enable Phone Notifications</div><div class="pwa-banner-sub">Notify 30 min before kickoff</div></div>
       <button class="pwa-banner-btn" onclick="requestPushPermission()">Aktifkan</button>
       <button class="pwa-banner-close" onclick="dismissPwaBanner()">×</button>
     </div>
@@ -477,7 +477,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
       <div class="notif-toggle-row">
         <div class="notif-toggle-left">
           <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-          <div><div class="toggle-label">Notifikasi Pertandingan</div><div class="toggle-sub">30 mnt sebelum & hasil akhir</div></div>
+          <div><div class="toggle-label">Match Notifications</div><div class="toggle-sub">30 min before kickoff & full-time result</div></div>
         </div>
         <div class="toggle-sw on" id="notifToggle" onclick="toggleNotif()" role="switch"><div class="toggle-knob"></div></div>
       </div>
@@ -494,8 +494,8 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
     <div id="pg-grup" class="page">
       <div class="grp-grid" id="grpBtns"></div>
       <div class="st-legend">
-        <div class="st-leg"><div class="st-dot" style="background:rgba(22,163,74,.4)"></div>Lolos otomatis</div>
-        <div class="st-leg"><div class="st-dot" style="background:rgba(29,111,206,.3)"></div>Kemungkinan lolos</div>
+        <div class="st-leg"><div class="st-dot" style="background:rgba(22,163,74,.4)"></div>Auto qualify</div>
+        <div class="st-leg"><div class="st-dot" style="background:rgba(29,111,206,.3)"></div>Possible qualify</div>
       </div>
       <div id="grpOut"></div>
     </div>
@@ -503,7 +503,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
     <!-- STATS -->
     <div id="pg-stats" class="page">
       <div class="stats-tabs">
-        <button class="stab active" onclick="setStTab('scorers',this)">⚽ Top Skor</button>
+        <button class="stab active" onclick="setStTab('scorers',this)">⚽ Top Scorers</button>
         <button class="stab" onclick="setStTab('assists',this)">🎯 Assist</button>
         <button class="stab" onclick="setStTab('teams',this)">🛡️ Tim</button>
       </div>
@@ -523,13 +523,13 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 
     <!-- ADMIN (hidden) -->
     <div id="pg-admin" class="page">
-      <div class="info-box">🔧 Admin panel untuk update data pertandingan. Tap judul app 7× untuk akses.</div>
+      <div class="info-box">🔧 Admin panel untuk update data matches. Tap judul app 7× untuk akses.</div>
       <div id="adminOut"></div>
     </div>
 
     <!-- BRACKET -->
     <div id="pg-bracket" class="page">
-      <div class="brk-info">👆 Geser kanan untuk lihat bagan lengkap. Bracket otomatis terisi setelah fase grup selesai (27 Jun).</div>
+      <div class="brk-info">👆 Swipe right to see the full bracket. The bracket fills in automatically once the group stage ends (Jun 27).</div>
       <div class="brk-scroll"><div class="brk-wrap" id="brkOut"></div></div>
     </div>
 
@@ -543,7 +543,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
     </button>
     <button class="nav-btn" onclick="navTo('fav',1)">
       <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-      Favorit
+      Favorites
     </button>
     <button class="nav-btn" onclick="navTo('hl',2)">
       <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
@@ -555,11 +555,11 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
     </button>
     <button class="nav-btn" onclick="navTo('jadwal',4)">
       <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-      Jadwal
+      Schedule
     </button>
     <button class="nav-btn" onclick="navTo('grup',5)">
       <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-      Grup
+      Groups
     </button>
     <button class="nav-btn" onclick="navTo('stats',6)">
       <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
@@ -567,7 +567,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
     </button>
     <button class="nav-btn" onclick="navTo('pred',7)">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-      Prediksi
+      Predictions
     </button>
     <button class="nav-btn" onclick="navTo('quiz',8)">
       <svg viewBox="0 0 24 24"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
@@ -666,13 +666,13 @@ let MATCHES = [
   {id:'H6',group:'H',utc:1782518400,home:'Uruguay',away:'Spain',sh:null,sa:null,st:'upcoming',venue:'Estadio Akron, Guadalajara',scorers:'',yt:''},
   {id:'I1',group:'I',utc:1781636400,home:'France',away:'Senegal',sh:3,sa:1,st:'done',venue:'MetLife Stadium, New York/NJ',scorers:"Mbappe 66\' & 90+6\' / Mbaye 82\'",yt:''},
   {id:'I2',group:'I',utc:1781647200,home:'Iraq',away:'Norway',sh:1,sa:4,st:'done',venue:'Gillette Stadium, Boston',scorers:"— / Haaland x2, Ostigard, Thorstvedt",yt:''},
-  {id:'I3',group:'I',utc:1782162000,home:'France',away:'Iraq',sh:null,sa:null,st:'upcoming',venue:'Lincoln Financial Field, Philadelphia',scorers:'',yt:''},
-  {id:'I4',group:'I',utc:1782172800,home:'Norway',away:'Senegal',sh:null,sa:null,st:'upcoming',venue:'MetLife Stadium, New York/NJ',scorers:'',yt:''},
+  {id:'I3',group:'I',utc:1782162000,home:'France',away:'Iraq',sh:3,sa:0,st:'done',venue:'Lincoln Financial Field, Philadelphia',scorers:"Mbappe 14', Mbappe 54', Dembele 66' / —",yt:''},
+  {id:'I4',group:'I',utc:1782172800,home:'Norway',away:'Senegal',sh:3,sa:2,st:'done',venue:'MetLife Stadium, New York/NJ',scorers:"Pedersen 43', Haaland 48', Haaland 58' / Sarr 53', Sarr 90+3'",yt:''},
   {id:'I5',group:'I',utc:1782500400,home:'Norway',away:'France',sh:null,sa:null,st:'upcoming',venue:'Gillette Stadium, Boston',scorers:'',yt:''},
   {id:'I6',group:'I',utc:1782500400,home:'Senegal',away:'Iraq',sh:null,sa:null,st:'upcoming',venue:'BMO Field, Toronto',scorers:'',yt:''},
   {id:'J1',group:'J',utc:1781658000,home:'Argentina',away:'Algeria',sh:3,sa:0,st:'done',venue:'Arrowhead Stadium, Kansas City',scorers:"Messi 3 (hat-trick) / —",yt:''},
   {id:'J2',group:'J',utc:1781668800,home:'Austria',away:'Jordan',sh:3,sa:1,st:'done',venue:'Levis Stadium, Santa Clara',scorers:"Schmid 20', Arnautovic 90+' pen, Abu Al Arab OG / Olwan 52'",yt:''},
-  {id:'J3',group:'J',utc:1782147600,home:'Argentina',away:'Austria',sh:null,sa:null,st:'upcoming',venue:'AT&T Stadium, Arlington TX',scorers:'',yt:''},
+  {id:'J3',group:'J',utc:1782147600,home:'Argentina',away:'Austria',sh:2,sa:0,st:'done',venue:'AT&T Stadium, Arlington TX',scorers:"Messi 38', Messi 90+5' / —",yt:''},
   {id:'J4',group:'J',utc:1782183600,home:'Jordan',away:'Algeria',sh:null,sa:null,st:'upcoming',venue:'Levis Stadium, Santa Clara',scorers:'',yt:''},
   {id:'J5',group:'J',utc:1782612000,home:'Algeria',away:'Austria',sh:null,sa:null,st:'upcoming',venue:'Arrowhead Stadium, Kansas City',scorers:'',yt:''},
   {id:'J6',group:'J',utc:1782612000,home:'Jordan',away:'Argentina',sh:null,sa:null,st:'upcoming',venue:'Levis Stadium, Santa Clara',scorers:'',yt:''},
@@ -691,19 +691,19 @@ let MATCHES = [
 ];
 
 const MATCH_STATS_DB = {
-  'A1':{possession:{home:52,away:48},shots:{home:14,away:8},shotsOnTarget:{home:6,away:3},corners:{home:7,away:4},fouls:{home:11,away:14},yellowCards:{home:1,away:2},redCards:{home:1,away:2},xG:{home:1.8,away:0.7},passes:{home:412,away:381},passAccuracy:{home:84,away:79},bigChances:{home:4,away:1},saves:{home:2,away:4},topPlayer:{home:'Julián Quiñones',away:'Percy Tau'},rating:{home:'Quiñones 8.2',away:'Tau 6.4'},attendance:87523,stadium:'Estadio Azteca',notes:'Mexico dominasi babak kedua. Dua kartu merah South Africa di menit 71.'},
-  'A2':{possession:{home:44,away:56},shots:{home:12,away:9},shotsOnTarget:{home:5,away:4},corners:{home:5,away:6},fouls:{home:13,away:10},yellowCards:{home:1,away:1},redCards:{home:0,away:0},xG:{home:1.6,away:1.4},passes:{home:368,away:449},passAccuracy:{home:76,away:84},bigChances:{home:3,away:3},saves:{home:3,away:3},topPlayer:{home:'Hwang In-beom',away:'Tomáš Souček'},rating:{home:'Hwang 8.8',away:'Souček 7.1'},attendance:42384,stadium:'Estadio Akron',notes:'Korea comeback dari ketertinggalan. Hwang gol+assist. Krejci cetak gol pertama untuk Czechia.'},
-  'B1':{possession:{home:51,away:49},shots:{home:10,away:11},shotsOnTarget:{home:4,away:5},corners:{home:4,away:6},fouls:{home:12,away:13},yellowCards:{home:1,away:2},redCards:{home:0,away:0},xG:{home:1.1,away:1.3},passes:{home:403,away:388},passAccuracy:{home:81,away:78},bigChances:{home:2,away:3},saves:{home:4,away:3},topPlayer:{home:'Cyle Larin',away:'Jovo Lukić'},rating:{home:'Larin 8.1',away:'Lukić 7.6'},attendance:45621,stadium:'BMO Field',notes:"Poin pertama sejarah Kanada di Piala Dunia. Larin super sub menit 77."},
-  'D1':{possession:{home:58,away:42},shots:{home:18,away:7},shotsOnTarget:{home:9,away:3},corners:{home:8,away:3},fouls:{home:9,away:14},yellowCards:{home:1,away:3},redCards:{home:0,away:0},xG:{home:3.2,away:0.8},passes:{home:512,away:367},passAccuracy:{home:88,away:76},bigChances:{home:6,away:1},saves:{home:2,away:5},topPlayer:{home:'Folarin Balogun',away:'Julio Enciso'},rating:{home:'Balogun 9.4',away:'Enciso 7.2'},attendance:76500,stadium:'SoFi Stadium',notes:"Balogun hat-trick! USA dominan total. Pulisic 2 assist."},
+  'A1':{possession:{home:52,away:48},shots:{home:14,away:8},shotsOnTarget:{home:6,away:3},corners:{home:7,away:4},fouls:{home:11,away:14},yellowCards:{home:1,away:2},redCards:{home:1,away:2},xG:{home:1.8,away:0.7},passes:{home:412,away:381},passAccuracy:{home:84,away:79},bigChances:{home:4,away:1},saves:{home:2,away:4},topPlayer:{home:'Julián Quiñones',away:'Percy Tau'},rating:{home:'Quiñones 8.2',away:'Tau 6.4'},attendance:87523,stadium:'Estadio Azteca',notes:'Mexico dominated the second half. Two red cards for South Africa at the 71st minute.'},
+  'A2':{possession:{home:44,away:56},shots:{home:12,away:9},shotsOnTarget:{home:5,away:4},corners:{home:5,away:6},fouls:{home:13,away:10},yellowCards:{home:1,away:1},redCards:{home:0,away:0},xG:{home:1.6,away:1.4},passes:{home:368,away:449},passAccuracy:{home:76,away:84},bigChances:{home:3,away:3},saves:{home:3,away:3},topPlayer:{home:'Hwang In-beom',away:'Tomáš Souček'},rating:{home:'Hwang 8.8',away:'Souček 7.1'},attendance:42384,stadium:'Estadio Akron',notes:'Korea came back from behind. Hwang scored and assisted. Krejci scored the opener for Czechia.'},
+  'B1':{possession:{home:51,away:49},shots:{home:10,away:11},shotsOnTarget:{home:4,away:5},corners:{home:4,away:6},fouls:{home:12,away:13},yellowCards:{home:1,away:2},redCards:{home:0,away:0},xG:{home:1.1,away:1.3},passes:{home:403,away:388},passAccuracy:{home:81,away:78},bigChances:{home:2,away:3},saves:{home:4,away:3},topPlayer:{home:'Cyle Larin',away:'Jovo Lukić'},rating:{home:'Larin 8.1',away:'Lukić 7.6'},attendance:45621,stadium:'BMO Field',notes:"Canada's first-ever World Cup point. Larin was a super sub in the 77th minute."},
+  'D1':{possession:{home:58,away:42},shots:{home:18,away:7},shotsOnTarget:{home:9,away:3},corners:{home:8,away:3},fouls:{home:9,away:14},yellowCards:{home:1,away:3},redCards:{home:0,away:0},xG:{home:3.2,away:0.8},passes:{home:512,away:367},passAccuracy:{home:88,away:76},bigChances:{home:6,away:1},saves:{home:2,away:5},topPlayer:{home:'Folarin Balogun',away:'Julio Enciso'},rating:{home:'Balogun 9.4',away:'Enciso 7.2'},attendance:76500,stadium:'SoFi Stadium',notes:"Balogun hat-trick! USA were utterly dominant. Pulisic with 2 assists."},
 };
 
 const BROADCAST = {
   tvFree:['TVRI Nasional','TVRI Sport'],
   streaming:[
-    {name:'MAXstream TV',platform:'Telkomsel',url:'https://maxstream.tv',price:'Rp25rb/7hr',icon:'📱'},
-    {name:'Fola Play',platform:'OTT TVRI',url:'https://folaplay.id',price:'Gratis sebagian',icon:'📺'},
-    {name:'TVRI Klik',platform:'TVRI',url:'https://tvri.go.id',price:'Gratis',icon:'🖥'},
-    {name:'FIFA+',platform:'FIFA',url:'https://www.fifa.com/fifaplus',price:'Gratis (highlights)',icon:'⚽'},
+    {name:'MAXstream TV',platform:'Telkomsel',url:'https://maxstream.tv',price:'Rp25k/7-day',icon:'📱'},
+    {name:'Fola Play',platform:'OTT TVRI',url:'https://folaplay.id',price:'Partially free',icon:'📺'},
+    {name:'TVRI Klik',platform:'TVRI',url:'https://tvri.go.id',price:'Free',icon:'🖥'},
+    {name:'FIFA+',platform:'FIFA',url:'https://www.fifa.com/fifaplus',price:'Free (highlights)',icon:'⚽'},
   ],
   channelByHour(h){
     if(h>=0&&h<6)return['TVRI Nasional','TVRI Sport'];
@@ -796,7 +796,7 @@ let PLAYER_STATS=[
   {name:'Boualem Khoukhi',    team:'Qatar',        flag:'🇶🇦',pos:'DF',goals:1,assists:0,mins:90},
   {name:'Cristiano Ronaldo',  team:'Portugal',     flag:'🇵🇹',pos:'FW',goals:1,assists:0,mins:90},
   {name:'Cédric Itten',       team:'DR Congo',     flag:'🇨🇩',pos:'FW',goals:1,assists:0,mins:90},
-  // ── assist signifikan ──────────────────────────────────────────────────
+  // ── assists signifikan ──────────────────────────────────────────────────
   {name:'Christian Pulisic',  team:'USA',          flag:'🇺🇸',pos:'MF',goals:0,assists:2,mins:45},
   {name:'Bukayo Saka',        team:'England',      flag:'🏴󠁧󠁢󠁥󠁮󠁧󠁿',pos:'FW',goals:0,assists:1,mins:22},
   {name:'Florian Wirtz',      team:'Germany',      flag:'🇩🇪',pos:'MF',goals:0,assists:1,mins:90},
@@ -837,9 +837,9 @@ const TEAM_KNOWLEDGE = {
   'Paraguay':{fifaRank:58,fifaPts:1410,attackRating:68,defenseRating:70,midfieldRating:67,wdlForm:['L','W','D','L','W'],avgGoalsScored:1.3,avgGoalsConceded:1.6,keyPlayers:[{name:'Miguel Almirón',pos:'MF',fitness:83,morale:78,impact:7},{name:'Julio Enciso',pos:'FW',fitness:84,morale:82,impact:7}],strengths:['Almiron','organization'],weaknesses:['attack'],worldCupWins:0,wcForm:[{opp:'USA',sh:1,sa:4,result:'L'}],notes:'Lost 1-4 to USA.'},
 };
 
-const DEFAULT_TEAM = {fifaRank:50,fifaPts:1450,attackRating:68,defenseRating:68,midfieldRating:67,wdlForm:['W','D','L','W','D'],avgGoalsScored:1.3,avgGoalsConceded:1.3,keyPlayers:[],strengths:['team spirit'],weaknesses:['experience'],worldCupWins:0,notes:'Data terbatas — prediksi berdasarkan FIFA ranking.'};
+const DEFAULT_TEAM = {fifaRank:50,fifaPts:1450,attackRating:68,defenseRating:68,midfieldRating:67,wdlForm:['W','D','L','W','D'],avgGoalsScored:1.3,avgGoalsConceded:1.3,keyPlayers:[],strengths:['team spirit'],weaknesses:['experience'],worldCupWins:0,notes:'Data terbatas — predictions berdasarkan FIFA ranking.'};
 
-function getTeamData(t){ return TEAM_KNOWLEDGE[t]||{...DEFAULT_TEAM,notes:`${t} — prediksi berdasarkan FIFA ranking.`}; }
+function getTeamData(t){ return TEAM_KNOWLEDGE[t]||{...DEFAULT_TEAM,notes:`${t} — predictions berdasarkan FIFA ranking.`}; }
 
 function predictMatch(homeTeam, awayTeam, isNeutral=false){
   const home=getTeamData(homeTeam), away=getTeamData(awayTeam);
@@ -943,7 +943,7 @@ function fmtTime(utc){
   const tz=getUserTZ(),tzl=getTZLabel(),d=new Date(utc*1000);
   const raw=d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',timeZone:tz});
   const t=raw.replace(':','.');
-  const dt=d.toLocaleDateString('id-ID',{weekday:'short',day:'numeric',month:'short',timeZone:tz});
+  const dt=d.toLocaleDateString('en-US',{weekday:'short',day:'numeric',month:'short',timeZone:tz});
   return{time:t,date:dt,label:tzl,full:`${dt} · ${t} ${tzl}`};
 }
 function dateKey(utc){return new Date(utc*1000).toLocaleDateString('sv-SE',{timeZone:getUserTZ()});}
@@ -954,11 +954,11 @@ function minsUntil(utc){return Math.floor((utc-Date.now()/1000)/60);}
 function getCountdownStr(utc){
   const sec=Math.floor(utc-Date.now()/1000);
   if(sec<=0)return null;
-  if(sec<60)return{str:`${sec}d lagi`,cls:'imminent'};
-  if(sec<3600){const m=Math.floor(sec/60),s=sec%60;return{str:`${m}j ${s}d lagi`,cls:'imminent'};}
-  if(sec<86400){const h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60);return{str:`${h}j ${m}m lagi`,cls:h<2?'soon':''};}
+  if(sec<60)return{str:`${sec}s left`,cls:'imminent'};
+  if(sec<3600){const m=Math.floor(sec/60),s=sec%60;return{str:`${m}m ${s}s left`,cls:'imminent'};}
+  if(sec<86400){const h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60);return{str:`${h}h ${m}m left`,cls:h<2?'soon':''};}
   const d=Math.floor(sec/86400),h=Math.floor((sec%86400)/3600);
-  return{str:`${d}h ${h}j lagi`,cls:''};
+  return{str:`${d}d ${h}h left`,cls:''};
 }
 
 // ── Favorites ────────────────────────────────────────────────
@@ -1036,21 +1036,21 @@ async function fetchScores(){
     console.debug('[OpenFootball]',e.message);
     if(!success){
       fetchAttempts++;apiOnline=false;
-      setStatus(fetchAttempts>=2?'offline':'error',fetchAttempts>=2?'⚠ Offline — data terakhir':'❌ Mencoba ulang...');
+      setStatus(fetchAttempts>=2?'offline':'error',fetchAttempts>=2?'⚠ Offline — last saved data':'❌ Retrying...');
       document.getElementById('apiDot').className='live-dot red';
     }
   }
 
   if(!success){
     fetchAttempts++;apiOnline=false;
-    setStatus(fetchAttempts>=2?'offline':'error',fetchAttempts>=2?'⚠ Offline — data terakhir':'❌ Mencoba ulang...');
+    setStatus(fetchAttempts>=2?'offline':'error',fetchAttempts>=2?'⚠ Offline — last saved data':'❌ Retrying...');
     document.getElementById('apiDot').className='live-dot red';
   }
 
   autoDetectLive();renderCurrentPage();scheduleNext();
   if(btn){setTimeout(()=>btn.classList.remove('loading'),600);}
-  document.getElementById('updTime').textContent='Update: '
-    +new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})
+  document.getElementById('updTime').textContent='Updated: '
+    +new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})
     +' '+getTZLabel()+(lastApiSource?' · '+lastApiSource:'');
 }
 
@@ -1107,7 +1107,7 @@ function computeTopScorersFromGoals(){
   const tally = {};
   for(const g of OPENFOOTBALL_GOALS){
     if(g.isOG) continue; // own goal bukan gol pribadi
-    if(!tally[g.name]) tally[g.name] = { name:g.name, team:g.team, goals:0, assists:0, mins:90, pos:'FW' };
+    if(!tally[g.name]) tally[g.name] = { name:g.name, team:g.team, goals:0, assistss:0, mins:90, pos:'FW' };
     tally[g.name].goals += 1;
   }
   return Object.values(tally).sort((a,b)=>b.goals-a.goals);
@@ -1205,7 +1205,7 @@ function renderBroadcastSection(utcTs){
   <div style="margin-bottom:9px"><div style="font-size:11px;color:var(--text2);margin-bottom:6px">📺 TV Gratis (Free to Air)</div><div style="display:flex;gap:6px;flex-wrap:wrap">${bc.tvChannels.map(c=>`<span class="bc-badge tv" style="font-size:12px;padding:5px 10px">📺 ${c}</span>`).join('')}</div></div>
   <div style="font-size:11px;color:var(--text2);margin-bottom:7px">📱 Live Streaming Resmi</div>
   <div class="bc-grid">${bc.streaming.map(s=>`<div class="bc-item"><div class="bc-item-name">${s.icon} ${s.name}</div><div class="bc-item-detail">${s.platform}</div><div class="bc-item-price${s.price.toLowerCase().includes('gratis')?'':' paid'}">${s.price}</div><a class="bc-open-btn" href="${s.url}" target="_blank" rel="noopener">Buka ↗</a></div>`).join('')}</div>
-  <div style="font-size:10px;color:var(--text3);margin-top:9px;line-height:1.5">✅ TVRI hak siar eksklusif resmi WC 2026 — 104 pertandingan gratis</div></div>`;
+  <div style="font-size:10px;color:var(--text3);margin-top:9px;line-height:1.5">✅ TVRI hak siar eksklusif resmi WC 2026 — 104 matches gratis</div></div>`;
 }
 
 // ── Prediction helpers ────────────────────────────────────────
@@ -1226,14 +1226,14 @@ function matchCard(m,opts={}){
   const isDone=m.st==='done',isLive=m.st==='live';
   const tf=fmtTime(m.utc);
   const isFav=isFavMatch(m);
-  const statusLabel=isDone?'Selesai':isLive?`● LIVE${liveMinute?' '+liveMinute+"'":''}`:tf.time+' '+tf.label;
+  const statusLabel=isDone?'Finished':isLive?`● LIVE${liveMinute?' '+liveMinute+"'":''}`:tf.time+' '+tf.label;
   const statusCls=isDone?'done':isLive?'live':'soon';
   const sh=m.sh!==null?m.sh:'–',sa=m.sa!==null?m.sa:'–';
   const digitCls=isLive?' live':'';
   const countdown=!isDone&&!isLive?getCountdownStr(m.utc):null;
 
   return`<div class="match-card${isLive?' is-live':''}${isFav?' is-fav':''}" onclick="openMatchModal('${m.id}')">
-    <div class="mc-meta"><span class="mc-grp">Grup ${m.group}</span><span class="mc-status ${statusCls}">${statusLabel}</span></div>
+    <div class="mc-meta"><span class="mc-grp">Group ${m.group}</span><span class="mc-status ${statusCls}">${statusLabel}</span></div>
     <div class="mc-body">
       <div class="mc-team"><div class="mc-flag">${flag(m.home)}</div><div class="mc-name">${m.home}</div><div class="mc-fav-star${favoriteTeams.has(m.home)?' active':''}" onclick="toggleFav('${m.home}',event)" title="Favorit">${favoriteTeams.has(m.home)?'⭐':'☆'}</div></div>
       <div class="mc-score-wrap">
@@ -1271,19 +1271,19 @@ function renderLive(){
 
   let h='';
   if(favoriteTeams.size&&favs.length){
-    h+=`<div class="sec-lbl">⭐ Tim Favorit Kamu</div>`;
+    h+=`<div class="sec-lbl">⭐ Your Favorite Teams</div>`;
     favs.forEach(m=>{h+=matchCard(m);});
     h+=`<div style="border-bottom:0.5px solid var(--border);margin:14px 0 12px"></div>`;
   }
-  if(lives.length){h+=`<div class="sec-lbl">🔴 Sedang Berlangsung</div>`;lives.forEach(m=>{h+=matchCard(m);});}
-  if(today.length){h+=`<div class="sec-lbl">📅 Pertandingan Hari Ini</div>`;today.forEach(m=>{h+=matchCard(m);});}
+  if(lives.length){h+=`<div class="sec-lbl">🔴 Live Now</div>`;lives.forEach(m=>{h+=matchCard(m);});}
+  if(today.length){h+=`<div class="sec-lbl">📅 Today's Matches</div>`;today.forEach(m=>{h+=matchCard(m);});}
   if(nextDay.length){
-    const d=new Date(nearDt+'T12:00:00').toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long'});
+    const d=new Date(nearDt+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',day:'numeric',month:'long'});
     h+=`<div class="sec-lbl">⏰ Berikutnya — ${d}</div>`;
     nextDay.forEach(m=>{h+=matchCard(m);});
   }
-  if(recent.length){h+=`<div class="sec-lbl">✅ Hasil Terbaru</div>`;recent.forEach(m=>{h+=matchCard(m,{showHl:true});});}
-  if(!h)h=emptyHtml('<circle cx="12" cy="12" r="10"/>','Turnamen selesai','🏆 Terima kasih!');
+  if(recent.length){h+=`<div class="sec-lbl">✅ Latest Results</div>`;recent.forEach(m=>{h+=matchCard(m,{showHl:true});});}
+  if(!h)h=emptyHtml('<circle cx="12" cy="12" r="10"/>','Tournament finished','🏆 Thanks for following along!');
 
   document.getElementById('liveOut').innerHTML=h;
   updateNotifBadge();
@@ -1333,32 +1333,32 @@ function renderFav(){
     const coming = favMs.filter(m => m.st === 'upcoming').sort((a,b)=>a.utc-b.utc).slice(0,6);
     const done   = favMs.filter(m => m.st === 'done').sort((a,b)=>b.utc-a.utc).slice(0,6);
     if(live.length){
-      matchList += '<div class="sec-lbl">🔴 Sedang Berlangsung</div>';
+      matchList += '<div class="sec-lbl">🔴 Live Now</div>';
       live.forEach(m => { matchList += matchCard(m); });
     }
     if(coming.length){
-      matchList += '<div class="sec-lbl">⏰ Jadwal Tim Favorit</div>';
+      matchList += '<div class="sec-lbl">⏰ Favorite Team Fixtures</div>';
       coming.forEach(m => { matchList += matchCard(m); });
     }
     if(done.length){
-      matchList += '<div class="sec-lbl">✅ Hasil Terbaru</div>';
+      matchList += '<div class="sec-lbl">✅ Latest Results</div>';
       done.forEach(m => { matchList += matchCard(m, {showHl:true}); });
     }
     if(!live.length && !coming.length && !done.length){
-      matchList = '<div style="text-align:center;padding:20px;color:var(--text3);font-size:13px">Tim favorit belum bermain.</div>';
+      matchList = "<div style=\"text-align:center;padding:20px;color:var(--text3);font-size:13px\">Your favorite teams haven't played yet.</div>";
     }
   } else {
-    matchList = '<div style="text-align:center;padding:20px;color:var(--text3);font-size:13px">Pilih tim di atas untuk melihat jadwal dan notifikasi.</div>';
+    matchList = '<div style="text-align:center;padding:20px;color:var(--text3);font-size:13px">Select a team above to see its schedule and notifications.</div>';
   }
 
   document.getElementById('favOut').innerHTML =
-    '<div class="sec-lbl">⭐ Pilih Tim Favorit (maks. ' + MAX_FAV + ')</div>'
-    + (overLimit ? '<div class="info-box" style="color:var(--amber)">Maks '+MAX_FAV+' tim. Tap tim yang dipilih untuk hapus.</div>' : '')
+    '<div class="sec-lbl">⭐ Choose Favorite Teams (max. ' + MAX_FAV + ')</div>'
+    + (overLimit ? '<div class="info-box" style="color:var(--amber)">Maks '+MAX_FAV+' tim. Tap a selected team to remove it.</div>' : '')
     + '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:14px">' + grid + '</div>'
     + '<div style="display:flex;align-items:center;justify-content:space-between;'
     + 'padding:10px 13px;background:var(--bg);border-radius:10px;margin-bottom:14px">'
-    + '<div><div style="font-size:13px;font-weight:600">🔔 Notif tim favorit saja</div>'
-    + '<div style="font-size:11px;color:var(--text2);margin-top:2px">Nonaktifkan notif pertandingan lain</div></div>'
+    + '<div><div style="font-size:13px;font-weight:600">🔔 Favorite teams only notifications</div>'
+    + '<div style="font-size:11px;color:var(--text2);margin-top:2px">Turn off notifications for other matches</div></div>'
     + '<div class="toggle-sw' + (favNotifOn ? ' on' : '') + '" '
     + 'onclick="ls(\'wc_fav_notif\',!(ls(\'wc_fav_notif\')!==false));renderFav()" role="switch">'
     + '<div class="toggle-knob"></div></div></div>'
@@ -1375,16 +1375,16 @@ function toggleFavTeamPage(team){
 }
 
 function renderHl(){
-  // Tampilkan SEMUA pertandingan selesai, dengan atau tanpa YouTube ID
+  // Tampilkan SEMUA matches selesai, dengan atau tanpa YouTube ID
   const done=MATCHES.filter(m=>m.st==='done').slice().reverse();
-  if(!done.length){document.getElementById('hlOut').innerHTML=emptyHtml('<polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>','Belum ada highlights','Tersedia 1–3 jam setelah pertandingan selesai');return;}
-  let h=`<div class="sec-lbl">📺 Official Highlights — ${done.length} pertandingan</div>`;
+  if(!done.length){document.getElementById('hlOut').innerHTML=emptyHtml('<polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>','No highlights yet','Available 1-3 hours after the match ends');return;}
+  let h=`<div class="sec-lbl">📺 Official Highlights — ${done.length} matches</div>`;
   for(const m of done){
     const tf=fmtTime(m.utc);
     const hasYt=!!m.yt;
     const ytSearch=`${m.home} vs ${m.away} World Cup 2026 highlights`;
     h+=`<div class="hl-card">
-      <div class="hl-hdr"><span class="hl-badge">Grup ${m.group}</span><span class="hl-title">${m.home} ${m.sh}–${m.sa} ${m.away}</span></div>
+      <div class="hl-hdr"><span class="hl-badge">Group ${m.group}</span><span class="hl-title">${m.home} ${m.sh}–${m.sa} ${m.away}</span></div>
       <div class="hl-meta">${tf.date} · ${m.venue}${m.scorers?'<br>⚽ '+m.scorers:''}</div>
       ${hasYt ? `
       <div id="yt-${m.id}" class="yt-wrap">
@@ -1393,10 +1393,10 @@ function renderHl(){
           <div class="yt-play"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
         </div>
       </div>
-      <a class="yt-link" href="https://www.youtube.com/watch?v=${m.yt}" target="_blank" rel="noopener">▶ Tonton di YouTube</a>
+      <a class="yt-link" href="https://www.youtube.com/watch?v=${m.yt}" target="_blank" rel="noopener">▶ Watch on YouTube</a>
       ` : `
       <div style="padding:14px;display:flex;gap:10px">
-        <a class="yt-link" style="flex:1;border:0.5px solid var(--border);border-radius:9px;padding:10px" href="https://www.youtube.com/results?search_query=${encodeURIComponent(ytSearch)}" target="_blank" rel="noopener">🔍 Cari di YouTube</a>
+        <a class="yt-link" style="flex:1;border:0.5px solid var(--border);border-radius:9px;padding:10px" href="https://www.youtube.com/results?search_query=${encodeURIComponent(ytSearch)}" target="_blank" rel="noopener">🔍 Search on YouTube</a>
         <a class="yt-link" style="flex:1;border:0.5px solid var(--border);border-radius:9px;padding:10px" href="https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/highlights" target="_blank" rel="noopener">⚽ FIFA.com</a>
       </div>
       `}
@@ -1412,8 +1412,8 @@ function genNotifs(){
   return MATCHES.flatMap(m=>{
     const items=[];
     if(m.st==='done'&&!dismissedSet.has('r_'+m.id)){
-      const win=m.sh>m.sa?'🏆 '+m.home+' menang':m.sh<m.sa?'🏆 '+m.away+' menang':'Seri';
-      items.push({id:'r_'+m.id,type:'result',title:'Hasil: '+m.home+' vs '+m.away,body:win+' — '+m.sh+' : '+m.sa+(m.scorers?'\n⚽ '+m.scorers:''),time:'Grup '+m.group+' · '+fmtTime(m.utc).date});
+      const win=m.sh>m.sa?'🏆 '+m.home+' won':m.sh<m.sa?'🏆 '+m.away+' won':'Seri';
+      items.push({id:'r_'+m.id,type:'result',title:'Result: '+m.home+' vs '+m.away,body:win+' — '+m.sh+' : '+m.sa+(m.scorers?'\n⚽ '+m.scorers:''),time:'Grup '+m.group+' · '+fmtTime(m.utc).date});
     }
     if(m.st==='live'&&!dismissedSet.has('l_'+m.id))items.push({id:'l_'+m.id,type:'live',title:'🔴 LIVE: '+m.home+' vs '+m.away,body:'Sedang berlangsung · '+m.venue,time:'Grup '+m.group});
     if(m.st==='upcoming'&&soonIn30(m.utc)&&!dismissedSet.has('s_'+m.id))items.push({id:'s_'+m.id,type:'soon',title:'⏰ Segera: '+m.home+' vs '+m.away,body:'Mulai dalam '+minsUntil(m.utc)+' menit · '+m.venue,time:'Grup '+m.group+' · '+fmtTime(m.utc).time+' '+getTZLabel()});
@@ -1428,13 +1428,13 @@ function renderNotif(){
   const tog=document.getElementById('notifToggle');
   if(tog){tog.classList.toggle('on',notifEnabled);tog.setAttribute('aria-checked',String(notifEnabled));}
   updateNotifBadge();
-  if(!notifEnabled){document.getElementById('notifOut').innerHTML=emptyHtml('<path d="M13.73 21a2 2 0 0 1-3.46 0"/><path d="M18.63 13A17.89 17.89 0 0 1 18 8"/><path d="M6.26 6.26A5.86 5.86 0 0 0 6 8c0 7-3 9-3 9h14"/><line x1="1" y1="1" x2="23" y2="23"/>','Notifikasi dinonaktifkan','Aktifkan toggle di atas');return;}
+  if(!notifEnabled){document.getElementById('notifOut').innerHTML=emptyHtml('<path d="M13.73 21a2 2 0 0 1-3.46 0"/><path d="M18.63 13A17.89 17.89 0 0 1 18 8"/><path d="M6.26 6.26A5.86 5.86 0 0 0 6 8c0 7-3 9-3 9h14"/><line x1="1" y1="1" x2="23" y2="23"/>','Notifications disabled','Enable the toggle above');return;}
   const list=genNotifs().filter(x=>!dismissedSet.has(x.id));
   const icon={result:'🏁',live:'🔴',soon:'⏰'};
-  if(!list.length){document.getElementById('notifOut').innerHTML=emptyHtml('<polyline points="20 6 9 17 4 12"/>','Tidak ada notifikasi baru','Notifikasi muncul 30 mnt sebelum pertandingan & setelah selesai');return;}
+  if(!list.length){document.getElementById('notifOut').innerHTML=emptyHtml('<polyline points="20 6 9 17 4 12"/>','No new notifications','Notifications appear 30 min before kickoff & after final whistle');return;}
   let h='';
   for(const n of list)h+=`<div class="notif-item ${n.type}" id="ni-${n.id}"><div class="notif-icon">${icon[n.type]||'📢'}</div><div class="notif-body"><div class="notif-title ${n.type}">${n.title}</div><div class="notif-text">${n.body.replace(/\n/g,'<br>')}</div><div class="notif-time">${n.time}</div></div><button class="notif-close" onclick="dismissNotif('${n.id}')">×</button></div>`;
-  h+=`<div style="text-align:center;margin-top:8px"><button class="chip" onclick="dismissAll()">Hapus semua</button></div>`;
+  h+=`<div style="text-align:center;margin-top:8px"><button class="chip" onclick="dismissAll()">Clear all</button></div>`;
   document.getElementById('notifOut').innerHTML=h;
 }
 function dismissNotif(id){dismissedSet.add(id);ls('wc_dismissed',[...dismissedSet]);renderNotif();}
@@ -1444,14 +1444,14 @@ function toggleNotif(){notifEnabled=!notifEnabled;ls('wc_notif',notifEnabled);re
 // ── SCHEDULE ──────────────────────────────────────────────────
 function renderSched(){
   const grps=['ALL',...Object.keys(GROUPS),'FAV'];
-  document.getElementById('schedChips').innerHTML=grps.map(g=>`<button class="chip${g===activeSchedFlt?' active':''}" onclick="setSchedFlt('${g}')">${g==='ALL'?'Semua':g==='FAV'?'⭐ Favorit':'Grup '+g}</button>`).join('');
+  document.getElementById('schedChips').innerHTML=grps.map(g=>`<button class="chip${g===activeSchedFlt?' active':''}" onclick="setSchedFlt('${g}')">${g==='ALL'?'All':g==='FAV'?'⭐ Favorites':'Grup '+g}</button>`).join('');
   let ms=activeSchedFlt==='ALL'?MATCHES:activeSchedFlt==='FAV'?MATCHES.filter(m=>isFavMatch(m)):MATCHES.filter(m=>m.group===activeSchedFlt);
-  if(activeSchedFlt==='FAV'&&!favoriteTeams.size){document.getElementById('schedOut').innerHTML=`<div class="fav-empty">⭐ Belum ada tim favorit. Tap bintang di kartu pertandingan untuk menambahkan.</div>`;return;}
+  if(activeSchedFlt==='FAV'&&!favoriteTeams.size){document.getElementById('schedOut').innerHTML=`<div class="fav-empty">⭐ No favorite teams yet. Tap the star on a card matches untuk menambahkan.</div>`;return;}
   const bd={};
   for(const m of ms){const k=dateKey(m.utc);if(!bd[k])bd[k]=[];bd[k].push(m);}
   let h='';
   for(const[k,arr]of Object.entries(bd).sort()){
-    const dl=new Date(k+'T12:00:00').toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long'});
+    const dl=new Date(k+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',day:'numeric',month:'long'});
     h+=`<div class="day-hdr">📅 ${dl}</div>`;
     for(const m of arr.sort((a,b)=>a.utc-b.utc)){
       const tf=fmtTime(m.utc);const isFav=isFavMatch(m);
@@ -1465,7 +1465,7 @@ function renderSched(){
       </div>`;
     }
   }
-  if(!h)h=emptyHtml('<circle cx="12" cy="12" r="10"/>','Tidak ada pertandingan','');
+  if(!h)h=emptyHtml('<circle cx="12" cy="12" r="10"/>','No matches','');
   document.getElementById('schedOut').innerHTML=h;
 }
 function setSchedFlt(g){activeSchedFlt=g;renderSched();document.getElementById('scrollArea').scrollTop=0;}
@@ -1480,7 +1480,7 @@ function renderGrups(){
     h+=`<tr class="${cls}"><td class="tl">${i+1}</td><td class="tl"><div class="st-tf"><span class="st-flag">${gd.f[r.team]||'🏳'}</span>${r.team}</div></td><td>${r.pl}</td><td>${r.w}</td><td>${r.d}</td><td>${r.l}</td><td>${r.gd>0?'+':''}${r.gd}</td><td class="pts-col">${r.pts}</td></tr>`;
   });
   h+='</tbody></table>';
-  h+=`<div class="sec-lbl" style="margin-top:16px">📅 Jadwal Grup ${activeGrp}</div>`;
+  h+=`<div class="sec-lbl" style="margin-top:16px">📅 Group ${activeGrp} Schedule</div>`;
   for(const m of MATCHES.filter(x=>x.group===activeGrp).sort((a,b)=>a.utc-b.utc)){
     const tf=fmtTime(m.utc);const sc=m.st==='done'?`<span class="sr-score">${m.sh}–${m.sa}</span>`:`<span class="sr-score muted">vs</span>`;
     h+=`<div class="sched-row${m.st==='live'?' is-live':''}${isFavMatch(m)?' is-fav':''}" onclick="openMatchModal('${m.id}')">
@@ -1567,7 +1567,7 @@ function parseScorersToStats(){
         if(isOG) continue; // own goal tidak dihitung sebagai gol pribadi
 
         if(!tally[name]){
-          tally[name] = { name, team: side.team, goals: 0, assists: 0, mins: 90, pos: guessPosition(name) };
+          tally[name] = { name, team: side.team, goals: 0, assistss: 0, mins: 90, pos: guessPosition(name) };
         }
         tally[name].goals += goalCount;
       }
@@ -1627,11 +1627,11 @@ function renderStats(){
     flag: autoFlagForTeam(p.team),
     pos: p.pos,
     goals: p.goals,
-    assists: findAssist(p.name),
+    assistss: findAssist(p.name),
     mins: p.mins
   }));
 
-  // Tambahkan pemain yang HANYA punya assist (gol=0 di hasil auto-parser)
+  // Tambahkan pemain yang HANYA punya assists (gol=0 di hasil auto-parser)
   // dan belum tercakup oleh entry manapun di combinedStats (cek via surname juga)
   for(const p of PLAYER_STATS){
     if(p.assists>0 && !combinedStats.find(c=>sameNamePerson(c.name, p.name))){
@@ -1640,28 +1640,28 @@ function renderStats(){
   }
 
   const srcBadge = OPENFOOTBALL_GOALS.length>0
-    ? '<div class="stats-src"><span class="stats-src-dot"></span>✓ Live dari openfootball.json (GitHub) — nama lengkap, akurat</div>'
-    : '<div class="stats-src"><span class="stats-src-dot stale"></span>Fallback: parsing manual — refresh untuk update</div>';
+    ? '<div class="stats-src"><span class="stats-src-dot"></span>✓ Live from openfootball.json (GitHub) — full names, accurate</div>'
+    : '<div class="stats-src"><span class="stats-src-dot stale"></span>Fallback: manual parsing — refresh to update</div>';
 
   if(activeStTab==='scorers'){
     const sorted=[...combinedStats].filter(p=>p.goals>0).sort((a,b)=>b.goals-a.goals||b.assists-a.assists);
-    if(!sorted.length){out.innerHTML=emptyHtml('<circle cx="12" cy="12" r="10"/>','Belum ada data gol','');return;}
-    let h=srcBadge+`<div class="sec-lbl">⚽ Top Pencetak Gol — ${total} pertandingan</div>`;
-    sorted.forEach((p,i)=>{h+=`<div class="player-row" onclick="openPlayerModal('${p.name}','${p.team}')" style="cursor:pointer"><div class="p-rank ${rankCls(i)}">${rankIco(i)}</div><div class="p-flag">${p.flag}</div><div class="p-info"><div class="p-name">${p.name} <span style='font-size:11px;color:var(--text3)'>↗</span></div><div class="p-team">${p.team} · ${p.pos}</div><div class="p-chips">${p.assists>0?`<span class="p-chip blue">🎯 ${p.assists} assist</span>`:''}<span class="p-chip">${p.mins}' dimainkan</span></div></div><div class="p-stat"><div class="p-val">${p.goals}</div><div class="p-lbl">GOL</div></div></div>`;});
+    if(!sorted.length){out.innerHTML=emptyHtml('<circle cx="12" cy="12" r="10"/>','No goal data yet','');return;}
+    let h=srcBadge+`<div class="sec-lbl">⚽ Top Goalscorers — ${total} matches</div>`;
+    sorted.forEach((p,i)=>{h+=`<div class="player-row" onclick="openPlayerModal('${p.name}','${p.team}')" style="cursor:pointer"><div class="p-rank ${rankCls(i)}">${rankIco(i)}</div><div class="p-flag">${p.flag}</div><div class="p-info"><div class="p-name">${p.name} <span style='font-size:11px;color:var(--text3)'>↗</span></div><div class="p-team">${p.team} · ${p.pos}</div><div class="p-chips">${p.assists>0?`<span class="p-chip blue">🎯 ${p.assists} assists</span>`:''}<span class="p-chip">${p.mins}' played</span></div></div><div class="p-stat"><div class="p-val">${p.goals}</div><div class="p-lbl">GOL</div></div></div>`;});
     out.innerHTML=h;
   }else if(activeStTab==='assists'){
     const sorted=[...combinedStats].filter(p=>p.assists>0).sort((a,b)=>b.assists-a.assists||b.goals-a.goals);
-    if(!sorted.length){out.innerHTML=emptyHtml('<circle cx="12" cy="12" r="10"/>','Belum ada data assist','');return;}
+    if(!sorted.length){out.innerHTML=emptyHtml('<circle cx="12" cy="12" r="10"/>','No assist data yet','');return;}
     let h=`<div class="sec-lbl">🎯 Top Pengumpan</div>`;
-    sorted.forEach((p,i)=>{h+=`<div class="player-row" onclick="openPlayerModal('${p.name}','${p.team}')" style="cursor:pointer"><div class="p-rank ${rankCls(i)}">${rankIco(i)}</div><div class="p-flag">${p.flag}</div><div class="p-info"><div class="p-name">${p.name} <span style='font-size:11px;color:var(--text3)'>↗</span></div><div class="p-team">${p.team} · ${p.pos}</div><div class="p-chips">${p.goals>0?`<span class="p-chip green">⚽ ${p.goals} gol</span>`:''}<span class="p-chip">${p.mins}' dimainkan</span></div></div><div class="p-stat"><div class="p-val">${p.assists}</div><div class="p-lbl">ASSIST</div></div></div>`;});
+    sorted.forEach((p,i)=>{h+=`<div class="player-row" onclick="openPlayerModal('${p.name}','${p.team}')" style="cursor:pointer"><div class="p-rank ${rankCls(i)}">${rankIco(i)}</div><div class="p-flag">${p.flag}</div><div class="p-info"><div class="p-name">${p.name} <span style='font-size:11px;color:var(--text3)'>↗</span></div><div class="p-team">${p.team} · ${p.pos}</div><div class="p-chips">${p.goals>0?`<span class="p-chip green">⚽ ${p.goals} gol</span>`:''}<span class="p-chip">${p.mins}' played</span></div></div><div class="p-stat"><div class="p-val">${p.assists}</div><div class="p-lbl">ASSIST</div></div></div>`;});
     out.innerHTML=h;
   }else{
     const tm={};
     for(const m of MATCHES){if(m.st!=='done')continue;[m.home,m.away].forEach((t,idx)=>{if(!tm[t])tm[t]={team:t,flag:flag(t),gf:0,ga:0,pl:0,cs:0};const s=idx===0?m.sh:m.sa,c=idx===0?m.sa:m.sh;tm[t].gf+=s;tm[t].ga+=c;tm[t].pl++;if(c===0)tm[t].cs++;});}
     const teams=Object.values(tm).sort((a,b)=>b.gf-a.gf||(a.ga-b.ga));
-    if(!teams.length){out.innerHTML=emptyHtml('<circle cx="12" cy="12" r="10"/>','Belum ada data tim','');return;}
+    if(!teams.length){out.innerHTML=emptyHtml('<circle cx="12" cy="12" r="10"/>','No team data yet','');return;}
     const maxGf=Math.max(...teams.map(t=>t.gf),1);
-    let h=`<div class="sec-lbl">🛡️ Statistik Tim</div>`;
+    let h=`<div class="sec-lbl">🛡️ Team Stats</div>`;
     for(const t of teams){const gd=t.gf-t.ga,gdl=gd>0?'+'+gd:String(gd);const bar=Math.round(t.gf/maxGf*100);
       h+=`<div class="player-row" style="flex-direction:column;align-items:stretch;gap:8px"><div style="display:flex;align-items:center;gap:10px"><span style="font-size:26px">${t.flag}</span><div style="flex:1"><div class="p-name">${t.team}</div><div class="p-chips" style="margin-top:5px"><span class="p-chip">⚽ ${t.gf} gol</span><span class="p-chip">🔒 ${t.ga} kemasukan</span><span class="p-chip">GD ${gdl}</span>${t.cs>0?'<span class="p-chip green">🧤 Clean sheet</span>':''}</div></div><div class="p-stat"><div class="p-val">${t.gf}</div><div class="p-lbl">GOL</div></div></div><div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden"><div style="height:100%;width:${bar}%;background:var(--red);border-radius:3px;transition:width .4s"></div></div></div>`;
     }
@@ -1673,7 +1673,7 @@ function setStTab(tab,btn){activeStTab=tab;document.querySelectorAll('.stab').fo
 // ── PREDICTION TAB ────────────────────────────────────────────
 function renderPred(){
   const upcoming=MATCHES.filter(m=>m.st==='upcoming'||m.st==='live').sort((a,b)=>a.utc-b.utc).slice(0,12);
-  let h=`<div class="sec-lbl">🔮 Pilih Pertandingan</div><div class="chip-scroll">`;
+  let h=`<div class="sec-lbl">🔮 Select a Match</div><div class="chip-scroll">`;
   upcoming.forEach(m=>{
     const tf=fmtTime(m.utc);const sel=activePredMatch?.id===m.id;
     h+=`<button class="chip${sel?' active':''}" onclick="selectPredMatch('${m.id}')">${flag(m.home)}${m.home} vs ${m.away}${flag(m.away)}</button>`;
@@ -1685,7 +1685,7 @@ function renderPred(){
     h+=`<div class="pred-card">
       <div class="pred-header">
         <div class="pred-team-col"><div class="pred-flag">${flag(activePredMatch.home)}</div><div class="pred-name">${activePredMatch.home}</div><div class="pred-rank">FIFA #${hd.fifaRank}</div></div>
-        <div class="pred-vs-col"><div class="pred-score-pred">${pred.predictedScore}</div><div class="pred-vs-label">Prediksi Skor</div><div class="pred-time">${tf.full}</div><div class="pred-venue">${activePredMatch.venue}</div></div>
+        <div class="pred-vs-col"><div class="pred-score-pred">${pred.predictedScore}</div><div class="pred-vs-label">Score Prediction</div><div class="pred-time">${tf.full}</div><div class="pred-venue">${activePredMatch.venue}</div></div>
         <div class="pred-team-col"><div class="pred-flag">${flag(activePredMatch.away)}</div><div class="pred-name">${activePredMatch.away}</div><div class="pred-rank">FIFA #${ad.fifaRank}</div></div>
       </div>
       <div class="pred-prob-section">
@@ -1698,7 +1698,7 @@ function renderPred(){
       </div>
       <div class="pred-xg-row">
         <div class="pred-xg-col"><div class="pred-xg-val">${pred.homeXg}</div><div class="pred-xg-lbl">xG</div></div>
-        <div class="pred-xg-col"><div class="pred-confidence" style="color:${pred.confidencePct>65?'var(--green)':pred.confidencePct>50?'var(--amber)':'var(--text3)'}">Keyakinan ${pred.confidence}</div><div class="pred-conf-bar-bg"><div class="pred-conf-bar" style="width:${pred.confidencePct}%"></div></div><div style="font-size:10px;color:var(--text3);margin-top:2px">${pred.confidencePct}% akurasi</div></div>
+        <div class="pred-xg-col"><div class="pred-confidence" style="color:${pred.confidencePct>65?'var(--green)':pred.confidencePct>50?'var(--amber)':'var(--text3)'}">Confidence ${pred.confidence}</div><div class="pred-conf-bar-bg"><div class="pred-conf-bar" style="width:${pred.confidencePct}%"></div></div><div style="font-size:10px;color:var(--text3);margin-top:2px">${pred.confidencePct}% akurasi</div></div>
         <div class="pred-xg-col" style="text-align:right"><div class="pred-xg-val">${pred.awayXg}</div><div class="pred-xg-lbl">xG</div></div>
       </div>
       ${pred.keyFactors.length?`<div class="pred-factors"><div class="pred-factors-title">🔑 Faktor Kunci</div>${pred.keyFactors.map(f=>`<div class="pred-factor-item">• ${f}</div>`).join('')}</div>`:''}
@@ -1725,11 +1725,11 @@ async function renderQuiz(){
   const done = MATCHES.filter(m => m.st === 'done')
     .sort((a,b) => b.utc - a.utc).slice(0, 6);
 
-  let h = `<div class="info-box">🎯 Prediksi skor sebelum pertandingan. Skor tepat = <strong>3 poin</strong>, pemenang benar = <strong>1 poin</strong>.</div>`;
+  let h = `<div class="info-box">🎯 Predict the score before kickoff. Exact score = <strong>3 points</strong>, correct winner = <strong>1 point</strong>.</div>`;
 
   // ── Upcoming: submit prediction ───────────────────────────────────────
   if(upcoming.length){
-    h += `<div class="sec-lbl">📝 Submit Prediksimu</div>`;
+    h += `<div class="sec-lbl">📝 Submit Your Prediction</div>`;
     for(const m of upcoming){
       const tf = fmtTime(m.utc);
       const pred = myPreds[m.id];
@@ -1737,18 +1737,18 @@ async function renderQuiz(){
         // Already submitted
         h += `<div class="quiz-match-card"><div class="quiz-match-hdr">
           <span class="quiz-match-teams">${flag(m.home)} ${m.home} vs ${m.away} ${flag(m.away)}</span>
-          <span class="quiz-match-info">Grup ${m.group}</span>
+          <span class="quiz-match-info">Group ${m.group}</span>
         </div>
         <div class="quiz-submitted">
-          <div class="quiz-pred-badge">✅ Prediksimu: ${pred.sh} – ${pred.sa}</div>
+          <div class="quiz-pred-badge">✅ Your prediction: ${pred.sh} – ${pred.sa}</div>
           <div style="font-size:11px;color:var(--text3);margin-bottom:8px">${tf.date} · ${tf.time} ${tf.label}</div>
-          <button class="quiz-change-btn" onclick="deleteQuizPred('${m.id}')">✏ Ubah prediksi</button>
+          <button class="quiz-change-btn" onclick="deleteQuizPred('${m.id}')">✏ Edit prediction</button>
         </div></div>`;
       } else {
         // Input form
         h += `<div class="quiz-match-card"><div class="quiz-match-hdr">
           <span class="quiz-match-teams">${flag(m.home)} ${m.home} vs ${m.away} ${flag(m.away)}</span>
-          <span class="quiz-match-info">Grup ${m.group}</span>
+          <span class="quiz-match-info">Group ${m.group}</span>
         </div>
         <div style="font-size:11px;color:var(--text3);text-align:center;padding:4px 0 8px">${tf.date} · ${tf.time} ${tf.label}</div>
         <div class="quiz-score-row">
@@ -1764,7 +1764,7 @@ async function renderQuiz(){
             <input class="quiz-score-input" type="number" id="qa_${m.id}" min="0" max="20" value="0" inputmode="numeric">
           </div>
         </div>
-        <button class="quiz-submit-btn" onclick="submitQuizPred('${m.id}','${m.home}','${m.away}')">Submit Prediksi →</button>
+        <button class="quiz-submit-btn" onclick="submitQuizPred('${m.id}','${m.home}','${m.away}')">Submit Prediction →</button>
         </div>`;
       }
     }
@@ -1773,7 +1773,7 @@ async function renderQuiz(){
   // ── Past predictions with results ────────────────────────────────────
   const myDonePreds = done.filter(m => myPreds[m.id]);
   if(myDonePreds.length){
-    h += `<div class="sec-lbl">📊 Hasil Prediksimu</div>`;
+    h += `<div class="sec-lbl">📊 Your Prediction Results</div>`;
     let totalPts = 0;
     for(const m of myDonePreds){
       const pred = myPreds[m.id];
@@ -1784,20 +1784,20 @@ async function renderQuiz(){
       const pts = exactMatch ? 3 : winnerMatch ? 1 : 0;
       totalPts += pts;
       const ptsColor = pts===3?'var(--green)':pts===1?'var(--amber)':'var(--text3)';
-      const ptsLabel = pts===3?'🎯 Skor tepat! +3':pts===1?'✓ Pemenang benar +1':'✗ Meleset';
+      const ptsLabel = pts===3?'🎯 Exact score! +3':pts===1?'✓ Correct winner +1':'✗ Missed';
       h += `<div style="border:0.5px solid var(--border);border-radius:12px;padding:11px 13px;margin-bottom:8px;background:var(--bg)">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
           <span style="font-size:13px;font-weight:600">${flag(m.home)} ${m.home} vs ${m.away} ${flag(m.away)}</span>
           <span style="font-size:13px;font-weight:700;color:${ptsColor}">${ptsLabel}</span>
         </div>
         <div style="display:flex;gap:14px;font-size:12px;color:var(--text2)">
-          <span>Prediksimu: <strong>${pred.sh}–${pred.sa}</strong></span>
-          <span>Hasil: <strong>${m.sh}–${m.sa}</strong></span>
+          <span>Your prediction: <strong>${pred.sh}–${pred.sa}</strong></span>
+          <span>Result: <strong>${m.sh}–${m.sa}</strong></span>
         </div>
       </div>`;
     }
     h += `<div style="text-align:center;padding:10px;background:rgba(22,163,74,.08);border-radius:10px;font-size:14px;font-weight:700;color:var(--green);margin-bottom:14px">
-      Total Poin: ${totalPts} pts dari ${myDonePreds.length} prediksi
+      Total Points: ${totalPts} pts from ${myDonePreds.length} predictions
     </div>`;
   }
 
@@ -1806,23 +1806,23 @@ async function renderQuiz(){
   const lbData = await loadLeaderboard();
   if(lbData.length){
     const top = lbData.slice(0, 10);
-    h += `<table class="lb-table"><thead><tr><th class="lb-pos">#</th><th>Pemain</th><th>Prediksi</th><th class="lb-pts">Poin</th></tr></thead><tbody>`;
+    h += `<table class="lb-table"><thead><tr><th class="lb-pos">#</th><th>Player</th><th>Prediction</th><th class="lb-pts">Poin</th></tr></thead><tbody>`;
     top.forEach((row, i) => {
       const isMe = row.sid === mySid;
       const medal = i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1;
       h += `<tr${isMe?' class="lb-you"':''}>
         <td class="lb-pos">${medal}</td>
-        <td style="font-weight:${isMe?700:400}">${isMe?'🙋 Saya':'Pemain '+(i+1)}</td>
+        <td style="font-weight:${isMe?700:400}">${isMe?'🙋 Me':'Pemain '+(i+1)}</td>
         <td style="color:var(--text3)">${row.total}</td>
         <td class="lb-pts">${row.points}</td>
       </tr>`;
     });
     h += `</tbody></table>`;
     if(!lbData.find(r=>r.sid===mySid)&&myDonePreds.length){
-      h += `<div style="font-size:11px;color:var(--text3);text-align:center;margin-top:8px">Kamu belum muncul di leaderboard — prediksi lebih banyak untuk naik peringkat!</div>`;
+      h += `<div style="font-size:11px;color:var(--text3);text-align:center;margin-top:8px">You haven't appeared on the leaderboard yet — predictions lebih banyak untuk naik peringkat!</div>`;
     }
   } else {
-    h += `<div style="text-align:center;padding:20px;color:var(--text3);font-size:13px">Leaderboard akan muncul setelah ada prediksi yang terkonfirmasi.</div>`;
+    h += `<div style="text-align:center;padding:20px;color:var(--text3);font-size:13px">The leaderboard will appear once predictions are confirmed.</div>`;
   }
 
   out.innerHTML = h;
@@ -1885,16 +1885,16 @@ function checkAdminUnlock(){
   if(adminUnlockCount>=7){adminUnlocked=true;navTo('admin',8);adminUnlockCount=0;}
 }
 function renderAdmin(){
-  if(!adminUnlocked){document.getElementById('adminOut').innerHTML=`<div class="empty"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><div class="empty-title">Admin Panel</div><div class="empty-sub">Tap judul app 7× untuk unlock</div></div>`;return;}
+  if(!adminUnlocked){document.getElementById('adminOut').innerHTML=`<div class="empty"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><div class="empty-title">Admin Panel</div><div class="empty-sub">Tap the app title 7× to unlock</div></div>`;return;}
   const matchOpts=MATCHES.map(m=>`<option value="${m.id}">${m.id}: ${m.home} vs ${m.away} (${m.st})</option>`).join('');
   document.getElementById('adminOut').innerHTML=`
     <div class="admin-panel">
       <div class="admin-title">🔧 Admin Panel — Update Skor</div>
       <div class="admin-row"><label class="admin-label">Pilih Pertandingan</label><select class="admin-select" id="adminMatch" onchange="adminMatchChanged()">${matchOpts}</select></div>
-      <div class="admin-row"><label class="admin-label">Status</label><select class="admin-select" id="adminStatus"><option value="upcoming">Belum Dimulai</option><option value="live">Live</option><option value="done">Selesai</option></select></div>
+      <div class="admin-row"><label class="admin-label">Status</label><select class="admin-select" id="adminStatus"><option value="upcoming">Not Started</option><option value="live">Live</option><option value="done">Finished</option></select></div>
       <div class="admin-row"><label class="admin-label">Skor</label><div class="admin-score-row"><input class="admin-score-input" type="number" id="adminSh" min="0" max="20" value="0"><span class="admin-score-sep">:</span><input class="admin-score-input" type="number" id="adminSa" min="0" max="20" value="0"></div></div>
-      <div class="admin-row"><label class="admin-label">Pencetak Gol</label><input class="admin-input" type="text" id="adminScorers" placeholder="Contoh: Balogun 18' / Enciso 73'"></div>
-      <button class="admin-btn primary" onclick="adminSave()">💾 Simpan & Update Semua User</button>
+      <div class="admin-row"><label class="admin-label">Goalscorers</label><input class="admin-input" type="text" id="adminScorers" placeholder="Contoh: Balogun 18' / Enciso 73'"></div>
+      <button class="admin-btn primary" onclick="adminSave()">💾 Save & Update for All Users</button>
       <div class="admin-feedback" id="adminFeedback"></div>
     </div>
     <div class="admin-panel">
@@ -1902,8 +1902,8 @@ function renderAdmin(){
       <div class="admin-row"><label class="admin-label">Match ID</label><select class="admin-select" id="adminStatMatch">${MATCHES.filter(m=>m.st==='done').map(m=>`<option value="${m.id}">${m.id}: ${m.home} ${m.sh}-${m.sa} ${m.away}</option>`).join('')}</select></div>
       <div class="admin-row"><label class="admin-label">Possession Home (%)</label><input class="admin-input" id="sPosH" type="number" min="0" max="100" value="50"></div>
       <div class="admin-row"><label class="admin-label">Tembakan (Home : Away)</label><div class="admin-score-row"><input class="admin-score-input" id="sShotH" type="number" value="10"><span class="admin-score-sep">:</span><input class="admin-score-input" id="sShotA" type="number" value="8"></div></div>
-      <div class="admin-row"><label class="admin-label">Penonton</label><input class="admin-input" id="sAttend" type="number" placeholder="75000"></div>
-      <div class="admin-row"><label class="admin-label">Catatan</label><input class="admin-input" id="sNotes" type="text" placeholder="Highlight pertandingan..."></div>
+      <div class="admin-row"><label class="admin-label">Attendance</label><input class="admin-input" id="sAttend" type="number" placeholder="75000"></div>
+      <div class="admin-row"><label class="admin-label">Catatan</label><input class="admin-input" id="sNotes" type="text" placeholder="Highlight matches..."></div>
       <button class="admin-btn primary" onclick="adminSaveStats()">💾 Simpan Statistik</button>
       <div class="admin-feedback" id="adminStatFeedback"></div>
     </div>`;
@@ -1952,7 +1952,7 @@ async function adminSaveStats(){
 // ── BRACKET ───────────────────────────────────────────────────
 // ════════════════════════════════════════════════════════════════════════
 // CLINCH DETECTION — apakah tim X sudah PASTI lolos peringkat 1/2,
-// tak peduli hasil sisa pertandingan grup (matematis, bukan proyeksi)?
+// tak peduli hasil sisa matches grup (matematis, bukan proyeksi)?
 // Metode: simulasi skenario terburuk bagi tim X (kalah semua sisa laga
 // dengan margin besar) lalu cek apakah tim lain masih bisa menyusul.
 // ════════════════════════════════════════════════════════════════════════
@@ -2061,16 +2061,16 @@ function renderBracket(){
     {t:'Final',slots:[{home:{name:'TBD',flag:'',resolved:false},away:{name:'TBD',flag:'',resolved:false},sh:null,sa:null}],isFinal:true},
   ];
 let h='<div class="info-box" style="margin:0 13px 12px;line-height:1.7">'
-    +'<span class="brk-clinch-badge" style="position:relative;top:-1px">pasti</span> = sudah pasti lolos secara matematis, walau grup belum selesai.<br>'
-    +'<span class="brk-proj-badge" style="position:relative;top:-1px">proj</span> = proyeksi sementara, masih bisa berubah.<br>'
-    +'Tanpa badge = sudah final (grup selesai 6/6).</div>';
+    +"<span class=\"brk-clinch-badge\" style=\"position:relative;top:-1px\">guaranteed</span> = mathematically guaranteed to qualify, even though the group hasn't finished.<br>"
+    +'<span class="brk-proj-badge" style="position:relative;top:-1px">proj</span> = is a provisional projection and may still change.<br>'
+    +'No badge = final (group complete, 6/6 matches played).</div>';
   for(const r of rounds){
     h+=`<div class="brk-col"><div class="brk-hdr">${r.t}</div>`;
     r.slots.forEach((s,idx)=>{
       const hCls=s.home.clinched?'clinch':s.home.resolved?'real':s.home.projected?'proj':'tbd';
       const aCls=s.away.clinched?'clinch':s.away.resolved?'real':s.away.projected?'proj':'tbd';
-      const hBadge=s.home.clinched?'<span class="brk-clinch-badge">pasti</span>':s.home.projected?'<span class="brk-proj-badge">proj</span>':'';
-      const aBadge=s.away.clinched?'<span class="brk-clinch-badge">pasti</span>':s.away.projected?'<span class="brk-proj-badge">proj</span>':'';
+      const hBadge=s.home.clinched?'<span class="brk-clinch-badge">qualified</span>':s.home.projected?'<span class="brk-proj-badge">proj</span>':'';
+      const aBadge=s.away.clinched?'<span class="brk-clinch-badge">qualified</span>':s.away.projected?'<span class="brk-proj-badge">proj</span>':'';
       h+=`<div class="brk-match"><div class="brk-team"><span class="brk-tf">${s.home.flag||'🏳'}</span><span class="brk-tn ${hCls}">${s.home.name}${hBadge}</span><span class="brk-sc">${s.sh!==null?s.sh:''}</span></div><div class="brk-team"><span class="brk-tf">${s.away.flag||'🏳'}</span><span class="brk-tn ${aCls}">${s.away.name}${aBadge}</span><span class="brk-sc">${s.sa!==null?s.sa:''}</span></div></div>`;
       // Tampilkan info "lawan berikutnya" hanya untuk Round of 32 — pair menunjukkan match sebelahnya
       if(r.t==='Round of 32'&&s.nextVs!==undefined){
@@ -2078,7 +2078,7 @@ let h='<div class="info-box" style="margin:0 13px 12px;line-height:1.7">'
         const pHome=partner.home.resolved||partner.home.projected?partner.home.name:'pemenang lain';
         const pAway=partner.away.resolved||partner.away.projected?partner.away.name:'';
         const partnerLabel=pAway?`${pHome} vs ${pAway}`:pHome;
-        h+=`<div class="brk-next">↳ R16: vs pemenang <b>${partnerLabel}</b></div>`;
+        h+=`<div class="brk-next">↳ R16: vs winner of <b>${partnerLabel}</b></div>`;
       }
     });
     if(r.isFinal)h+=`<div style="text-align:center;font-size:11px;color:var(--text3);margin-top:7px;line-height:1.6">🏆 Final · 19 Jul 2026<br>MetLife Stadium, NJ</div>`;
@@ -2106,7 +2106,7 @@ function renderModal(){
   const isDone=m.st==='done',isLive=m.st==='live';
   const tf=fmtTime(m.utc);
   document.getElementById('modalTitle').innerHTML=`${flag(m.home)} ${m.home} <span style="color:var(--text3)">vs</span> ${m.away} ${flag(m.away)}`;
-  document.getElementById('modalSubtitle').textContent=`Grup ${m.group} · ${tf.full} · ${m.venue}`;
+  document.getElementById('modalSubtitle').textContent=`Group ${m.group} · ${tf.full} · ${m.venue}`;
   const tabs=isDone?[{id:'stats',label:'📊 Statistik'},{id:'pred',label:'🔮 Simulasi'}]:[{id:'pred',label:'🔮 Prediksi'},{id:'bc',label:'📡 Siaran'}];
   if(!tabs.find(t=>t.id===modalTabId))modalTabId=tabs[0].id;
   document.getElementById('modalTabs').innerHTML=tabs.map(t=>`<button class="modal-tab${t.id===modalTabId?' active':''}" onclick="setModalTab('${t.id}')">${t.label}</button>`).join('');
@@ -2118,13 +2118,13 @@ function renderModal(){
 function renderModalStats(m){
   const stats=MATCH_STATS_DB[m.id];
   const sh=m.sh!==null?m.sh:'–',sa=m.sa!==null?m.sa:'–';
-  let h=`<div class="mstat-hero"><div class="mstat-team"><div class="mstat-flag">${flag(m.home)}</div><div class="mstat-name">${m.home}</div></div><div class="mstat-score-center"><div class="mstat-score">${sh} : ${sa}</div><div class="mstat-status">${m.st==='done'?'⏱ Full Time':m.st==='live'?'● Live':'Belum dimulai'}</div></div><div class="mstat-team"><div class="mstat-flag">${flag(m.away)}</div><div class="mstat-name">${m.away}</div></div></div>`;
+  let h=`<div class="mstat-hero"><div class="mstat-team"><div class="mstat-flag">${flag(m.home)}</div><div class="mstat-name">${m.home}</div></div><div class="mstat-score-center"><div class="mstat-score">${sh} : ${sa}</div><div class="mstat-status">${m.st==='done'?'⏱ Full Time':m.st==='live'?'● Live':'Not started'}</div></div><div class="mstat-team"><div class="mstat-flag">${flag(m.away)}</div><div class="mstat-name">${m.away}</div></div></div>`;
   if(m.scorers)h+=`<div class="stat-section-title">⚽ Pencetak Gol</div><div class="stat-scorers-row"><div class="stat-scorers-col">${flag(m.home)} ${m.scorers.split(' / ')[0]||'—'}</div><div class="stat-scorers-col" style="text-align:right">${m.scorers.split(' / ')[1]||'—'} ${flag(m.away)}</div></div>`;
 
   // Share button
   h+=`<button class="mc-hl-btn" onclick="shareResult('${m.id}')" style="margin-bottom:10px">📤 Bagikan Hasil</button>`;
 
-  if(!stats){h+=`<div class="stat-notes">Statistik detail belum tersedia.</div>`;document.getElementById('modalBody').innerHTML=h;return;}
+  if(!stats){h+=`<div class="stat-notes">Detailed stats not available yet.</div>`;document.getElementById('modalBody').innerHTML=h;return;}
   h+=`<div class="stat-section-title">📊 Statistik Pertandingan</div>`;
   h+=`<div class="stat-duel" style="height:10px;margin-bottom:3px"><div class="stat-duel-home" style="width:${stats.possession?.home||50}%"></div><div class="stat-duel-away" style="width:${stats.possession?.away||50}%"></div></div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:12px"><span>${stats.possession?.home||0}% Penguasaan</span><span>${stats.possession?.away||0}%</span></div>`;
   const rows=[['Tembakan',stats.shots?.home,stats.shots?.away],['Tepat Sasaran',stats.shotsOnTarget?.home,stats.shotsOnTarget?.away],['xG',stats.xG?.home,stats.xG?.away],['Peluang Besar',stats.bigChances?.home,stats.bigChances?.away],['Penyelamatan',stats.saves?.home,stats.saves?.away],['Corners',stats.corners?.home,stats.corners?.away],['Kartu Kuning',stats.yellowCards?.home,stats.yellowCards?.away],['Kartu Merah',stats.redCards?.home,stats.redCards?.away],['Akurasi Umpan (%)',stats.passAccuracy?.home,stats.passAccuracy?.away]];
@@ -2135,7 +2135,7 @@ function renderModalStats(m){
     h+=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:9px"><span style="font-size:13px;font-weight:600;width:32px;text-align:right;color:${hc}">${hv}</span><div style="flex:1"><div style="font-size:10px;color:var(--text3);text-align:center;margin-bottom:2px">${label}</div><div class="stat-duel" style="height:6px"><div class="stat-duel-home" style="width:${hp}%;background:${hp>50?'var(--blue)':'var(--border2)'}"></div><div class="stat-duel-away" style="width:${100-hp}%;background:${hp<50?'var(--red)':'var(--border2)'}"></div></div></div><span style="font-size:13px;font-weight:600;width:32px;color:${ac}">${av}</span></div>`;
   }
   if(stats.rating)h+=`<div class="stat-section-title">⭐ Pemain Terbaik</div><div style="display:flex;gap:8px"><div class="stat-player-chip" style="flex:1"><div class="stat-player-name">${stats.topPlayer.home}<span class="stat-player-rating">${stats.rating.home.split(' ')[1]||'?'}</span></div><div class="stat-player-detail">${flag(m.home)} ${m.home}</div></div><div class="stat-player-chip" style="flex:1"><div class="stat-player-name">${stats.topPlayer.away}<span class="stat-player-rating" style="background:var(--amber)">${stats.rating.away.split(' ')[1]||'?'}</span></div><div class="stat-player-detail">${flag(m.away)} ${m.away}</div></div></div>`;
-  if(stats.attendance)h+=`<div class="stat-notes">🏟 ${stats.stadium||m.venue} · Penonton: ${stats.attendance.toLocaleString('id-ID')}${stats.notes?'\n'+stats.notes:''}</div>`;
+  if(stats.attendance)h+=`<div class="stat-notes">🏟 ${stats.stadium||m.venue} · Attendance: ${stats.attendance.toLocaleString('en-US')}${stats.notes?'\n'+stats.notes:''}</div>`;
   h+=`<div class="bc-section" style="margin-top:10px"><div class="bc-section-title">🔄 Tonton Ulang</div><div style="display:flex;gap:7px"><a class="bc-open-btn" style="flex:1;padding:8px;font-size:12px" href="https://folaplay.id" target="_blank">📺 Fola Play</a><a class="bc-open-btn" style="flex:1;padding:8px;font-size:12px" href="https://maxstream.tv" target="_blank">📱 MAXstream</a><a class="bc-open-btn" style="flex:1;padding:8px;font-size:12px" href="https://www.fifa.com/fifaplus" target="_blank">⚽ FIFA+</a></div></div>`;
   document.getElementById('modalBody').innerHTML=h;
 }
@@ -2144,7 +2144,7 @@ function renderModalPred(m){
   const pred=predictMatch(m.home,m.away,true);const hd=pred.homeData,ad=pred.awayData;const isDone=m.st==='done';
   let h='';
   if(isDone)h+=`<div style="background:rgba(22,163,74,.08);border:0.5px solid rgba(22,163,74,.25);border-radius:10px;padding:10px 13px;margin-bottom:12px;font-size:12px;color:var(--green)">ℹ Simulasi retroaktif. Hasil aktual: <strong>${m.home} ${m.sh}–${m.sa} ${m.away}</strong></div>`;
-  h+=`<div class="pred-header" style="margin-bottom:12px"><div class="pred-team-col"><div class="pred-flag">${flag(m.home)}</div><div class="pred-name">${m.home}</div><div class="pred-rank">FIFA #${hd.fifaRank}</div></div><div class="pred-vs-col"><div class="pred-score-pred">${pred.predictedScore}</div><div class="pred-vs-label">Prediksi Skor</div></div><div class="pred-team-col"><div class="pred-flag">${flag(m.away)}</div><div class="pred-name">${m.away}</div><div class="pred-rank">FIFA #${ad.fifaRank}</div></div></div>
+  h+=`<div class="pred-header" style="margin-bottom:12px"><div class="pred-team-col"><div class="pred-flag">${flag(m.home)}</div><div class="pred-name">${m.home}</div><div class="pred-rank">FIFA #${hd.fifaRank}</div></div><div class="pred-vs-col"><div class="pred-score-pred">${pred.predictedScore}</div><div class="pred-vs-label">Score Prediction</div></div><div class="pred-team-col"><div class="pred-flag">${flag(m.away)}</div><div class="pred-name">${m.away}</div><div class="pred-rank">FIFA #${ad.fifaRank}</div></div></div>
   <div class="pred-prob-section" style="background:var(--bg);border-radius:10px;margin-bottom:10px"><div class="pred-prob-row"><span class="pred-prob-label">${m.home}</span><div class="pred-prob-bar-wrap"><div class="pred-prob-bar home" style="width:${pred.homeWinProb}%"><span class="pred-prob-pct">${pred.homeWinProb}%</span></div><div class="pred-prob-bar draw" style="width:${pred.drawProb}%"><span class="pred-prob-pct">${pred.drawProb}%</span></div><div class="pred-prob-bar away" style="width:${pred.awayWinProb}%"><span class="pred-prob-pct">${pred.awayWinProb}%</span></div></div><span class="pred-prob-label right">${m.away}</span></div><div class="pred-prob-legend"><span class="pred-leg-item"><span class="pred-leg-dot home"></span>Menang ${pred.homeWinProb}%</span><span class="pred-leg-item"><span class="pred-leg-dot draw"></span>Seri ${pred.drawProb}%</span><span class="pred-leg-item"><span class="pred-leg-dot away"></span>Menang ${pred.awayWinProb}%</span></div></div>
   ${pred.keyFactors.length?`<div class="pred-factors" style="background:var(--bg);border-radius:10px;padding:10px 13px;margin-bottom:10px"><div class="pred-factors-title">🔑 Faktor Kunci</div>${pred.keyFactors.map(f=>`<div class="pred-factor-item">• ${f}</div>`).join('')}</div>`:''}
   ${renderRatingBar('Serangan',hd.attackRating,ad.attackRating)}${renderRatingBar('Pertahanan',hd.defenseRating,ad.defenseRating)}${renderRatingBar('Gelandang',hd.midfieldRating,ad.midfieldRating)}
@@ -2158,7 +2158,7 @@ function renderModalBc(m){document.getElementById('modalBody').innerHTML=renderB
 // ── Share result ──────────────────────────────────────────────
 async function shareResult(matchId){
   const m=MATCHES.find(x=>x.id===matchId);if(!m||m.st!=='done')return;
-  const text=`⚽ WC 2026 Hasil Pertandingan\n${flag(m.home)} ${m.home} ${m.sh}–${m.sa} ${m.away} ${flag(m.away)}\nGrup ${m.group} · ${fmtTime(m.utc).date}${m.scorers?'\n⚽ '+m.scorers:''}\n\n#FIFAWorldCup2026 #WC2026`;
+  const text=`⚽ WC 2026 Hasil Pertandingan\n${flag(m.home)} ${m.home} ${m.sh}–${m.sa} ${m.away} ${flag(m.away)}\nGroup ${m.group} · ${fmtTime(m.utc).date}${m.scorers?'\n⚽ '+m.scorers:''}\n\n#FIFAWorldCup2026 #WC2026`;
   if(navigator.share){try{await navigator.share({title:'WC 2026',text});return;}catch{}}
   try{await navigator.clipboard.writeText(text);alert('✅ Disalin ke clipboard!');}catch{alert('Copy manual:\n'+text);}
 }
@@ -2179,9 +2179,9 @@ async function registerSW(){
 }
 async function requestPushPermission(){
   document.getElementById('pwaBanner')?.classList.remove('show');
-  if(!('Notification' in window)){alert('Browser tidak mendukung notifikasi.');return;}
+  if(!('Notification' in window)){alert('Your browser does not support notifications.');return;}
   const perm=await Notification.requestPermission();
-  if(perm==='granted'){new Notification('⚽ WC 2026 — Notifikasi aktif!',{body:'Anda akan mendapat notif 30 menit sebelum pertandingan.',icon:'/icon.svg',tag:'wc2026-welcome'});scheduleMatchReminders();}
+  if(perm==='granted'){new Notification('⚽ WC 2026 — Notifications enabled!',{body:"You'll get a notification 30 minutes before kickoff.",icon:'/icon.svg',tag:'wc2026-welcome'});scheduleMatchReminders();}
   else localStorage.setItem('wc2026_push_dismissed','1');
 }
 function dismissPwaBanner(){document.getElementById('pwaBanner')?.classList.remove('show');localStorage.setItem('wc2026_push_dismissed','1');}
@@ -2191,7 +2191,7 @@ function scheduleMatchReminders(){
   MATCHES.filter(m=>m.st==='upcoming'&&m.utc>nowSec).sort((a,b)=>a.utc-b.utc).slice(0,10).forEach(m=>{
     const tf=fmtTime(m.utc);
     const delay=(m.utc-1800)*1000-Date.now();
-    if(delay>0&&delay<7*86400000)setTimeout(()=>{if(Notification.permission==='granted')new Notification(`⏰ Segera! ${m.home} vs ${m.away}`,{body:`Pertandingan Grup ${m.group} dimulai 30 menit lagi!\n📍 ${m.venue} · ${tf.time} ${tf.label}`,icon:'/icon.svg',tag:'soon-'+m.id,vibrate:[200,100,200]});},delay);
+    if(delay>0&&delay<7*86400000)setTimeout(()=>{if(Notification.permission==='granted')new Notification(`⏰ Segera! ${m.home} vs ${m.away}`,{body:`Pertandingan Group ${m.group} starts in 30 minutes!\n📍 ${m.venue} · ${tf.time} ${tf.label}`,icon:'/icon.svg',tag:'soon-'+m.id,vibrate:[200,100,200]});},delay);
   });
 }
 
@@ -2231,7 +2231,7 @@ function renderCurrentPage(){renderPage(currentPage);}
 // ── Player Profile Database ───────────────────────────────────────────
 const PLAYER_PROFILES = {
   'Folarin Balogun':   {no:9,  caps:28, wcGoals:2, club:'AS Monaco',  nation:'USA',       born:'2001',height:'183cm',foot:'Right',note:'First US player with 2+ WC goals since 1930.'},
-  'Christian Pulisic': {no:10, caps:78, wcGoals:0, club:'AC Milan',   nation:'USA',       born:'1998',height:'177cm',foot:'Right',note:'Captain & playmaker. 2 assist vs Paraguay.'},
+  'Christian Pulisic': {no:10, caps:78, wcGoals:0, club:'AC Milan',   nation:'USA',       born:'1998',height:'177cm',foot:'Right',note:'Captain & playmaker. 2 assists vs Paraguay.'},
   'Giovanni Reyna':    {no:7,  caps:35, wcGoals:1, club:'Borussia Dortmund',nation:'USA',  born:'2002',height:'182cm',foot:'Right',note:'Son of Claudio Reyna. Impact sub, goal 90+.'},
   'Malik Tillman':     {no:11, caps:22, wcGoals:0, club:'PSV',         nation:'USA',      born:'2002',height:'185cm',foot:'Right',note:'Assist gol kedua Balogun vs Paraguay.'},
   'Julián Quiñones':   {no:9,  caps:18, wcGoals:1, club:'Cruz Azul',   nation:'Mexico',   born:'1998',height:'174cm',foot:'Right',note:'Buka skor WC 2026 menit ke-9.'},
@@ -2254,7 +2254,7 @@ const PLAYER_PROFILES = {
   'Kai Havertz':       {no:29, caps:70, wcGoals:2, club:'Arsenal',     nation:'Germany',  born:'1999',height:'189cm',foot:'Right',note:'Brace vs Curacao. Penalty + gol penutup 88.'},
   'Jamal Musiala':     {no:10, caps:41, wcGoals:1, club:'Bayern Munich',nation:'Germany', born:'2003',height:'181cm',foot:'Both',note:'Gol ke-4 dari umpan Kimmich. Pemilik masa depan Jerman.'},
   'Felix Nmecha':      {no:8,  caps:22, wcGoals:1, club:'Borussia Dortmund',nation:'Germany',born:'2000',height:'185cm',foot:'Right',note:'Gol pembuka WC 2026 Jerman. Penalty-winner.'},
-  'Deniz Undav':       {no:14, caps:18, wcGoals:1, club:'VfB Stuttgart',nation:'Germany', born:'1996',height:'178cm',foot:'Right',note:'Sub menit 64: 1 gol, 2 assist. Nagelsmann ternyata genius.'},
+  'Deniz Undav':       {no:14, caps:18, wcGoals:1, club:'VfB Stuttgart',nation:'Germany', born:'1996',height:'178cm',foot:'Right',note:'Sub menit 64: 1 gol, 2 assists. Nagelsmann ternyata genius.'},
   'Florian Wirtz':     {no:17, caps:35, wcGoals:0, club:'Bayer Leverkusen',nation:'Germany',born:'2003',height:'176cm',foot:'Left',note:'Assist Nmecha. Diprediksi pemain terbaik WC 2026.'},
   'Livano Comenencia': {no:9,  caps:14, wcGoals:1, club:'Curacao FC',  nation:'Curaçao',  born:'1999',height:'183cm',foot:'Right',note:'GOL BERSEJARAH! Gol pertama Curaçao di WC.'},
   'Sébastien Haller':  {no:9,  caps:30, wcGoals:1, club:'Borussia Dortmund',nation:'Ivory Coast',born:'1994',height:'190cm',foot:'Right',note:'Gol tunggal vs Ecuador. Cancer survivor, WC debut.'},
@@ -2262,7 +2262,7 @@ const PLAYER_PROFILES = {
   'Cody Summerville':  {no:11, caps:18, wcGoals:1, club:'Leeds United',nation:'Netherlands',born:'2001',height:'175cm',foot:'Right',note:'Gol ke-2 Netherlands. Pemain cepat kiri.'},
   'Daichi Kamada':     {no:8,  caps:51, wcGoals:1, club:'Crystal Palace',nation:'Japan',  born:'1996',height:'182cm',foot:'Right',note:'Header defleksi menit 89. Drama klasik Jepang!'},
   'Alexander Isak':    {no:14, caps:55, wcGoals:2, club:'Newcastle',   nation:'Sweden',   born:'1999',height:'190cm',foot:'Right',note:'2 gol vs Tunisia. Salah satu striker terbaik dunia.'},
-  'Viktor Gyökeres':   {no:9,  caps:38, wcGoals:2, club:'Arsenal',     nation:'Sweden',   born:'1998',height:'186cm',foot:'Right',note:'2 gol + 1 assist vs Tunisia. 50+ gol musim ini!'},
+  'Viktor Gyökeres':   {no:9,  caps:38, wcGoals:2, club:'Arsenal',     nation:'Sweden',   born:'1998',height:'186cm',foot:'Right',note:'2 gol + 1 assists vs Tunisia. 50+ gol musim ini!'},
   'Breel Embolo':      {no:10, caps:72, wcGoals:1, club:'AS Monaco',   nation:'Switzerland',born:'1997',height:'187cm',foot:'Right',note:'Penalty di menit 17, rebound dari Khoukhi gol 90+.'},
   'Boualem Khoukhi':   {no:5,  caps:88, wcGoals:1, club:'Al Sadd',     nation:'Qatar',    born:'1990',height:'184cm',foot:'Right',note:'Gol dramatis menit 90+. Kapten veteran Qatar.'},
 };
@@ -2322,7 +2322,7 @@ function openPlayerModal(name, teamName){
     h += `</div>`;
     h += `<div style="font-size:12px;color:var(--text2);background:var(--bg);border-radius:8px;padding:10px;margin-top:10px;line-height:1.6;font-style:italic">💬 ${profile.note}</div>`;
   } else {
-    h += `<div style="font-size:12px;color:var(--text3);text-align:center;padding:16px">Profil detail belum tersedia untuk pemain ini.</div>`;
+    h += `<div style="font-size:12px;color:var(--text3);text-align:center;padding:16px">Detailed profile not available for this player yet.</div>`;
   }
 
   // Matches played
@@ -2353,7 +2353,7 @@ function openPlayerModal(name, teamName){
 
 
 // ════════════════════════════════════════════════════════════════════════
-// API-FOOTBALL — Auto-update top scorers, assists, dan match events
+// API-FOOTBALL — Auto-update top scorers, assistss, dan match events
 // League ID = 1 (FIFA World Cup), Season = 2026
 // Free tier: 100 req/day — kita hemat: hanya panggil saat buka tab Stats
 // Daftar gratis: https://dashboard.api-football.com/register
@@ -2433,7 +2433,7 @@ async function fetchTopScorersFromApi(){
 
     if(!rsScorersData || !rsAssistsData) return false;
 
-    // Merge scorers + assists into PLAYER_STATS format
+    // Merge scorers + assistss into PLAYER_STATS format
     const merged = {};
 
     for(const entry of rsScorersData){
@@ -2446,7 +2446,7 @@ async function fetchTopScorersFromApi(){
         team: s.team?.name || '',
         flag: teamFlag(s.team?.name || ''),
         pos: p.position?.substring(0,2) || 'FW',
-        goals: 0, assists: 0,
+        goals: 0, assistss: 0,
         mins: s.games?.minutes || 0
       };
       merged[key].goals = s.goals?.total || 0;
@@ -2462,7 +2462,7 @@ async function fetchTopScorersFromApi(){
         team: s.team?.name || '',
         flag: teamFlag(s.team?.name || ''),
         pos: p.position?.substring(0,2) || 'MF',
-        goals: 0, assists: 0,
+        goals: 0, assistss: 0,
         mins: s.games?.minutes || 0
       };
       merged[key].assists = s.goals?.assists || 0;
