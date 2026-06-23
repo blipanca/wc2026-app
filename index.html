@@ -2169,7 +2169,7 @@ async function shareResult(matchId){
 async function registerSW(){
   if(!('serviceWorker' in navigator))return;
   try{
-    const reg=await navigator.serviceWorker.register('/sw.js');
+    const reg=await navigator.serviceWorker.register('./sw.js');
     const perm=Notification.permission;
     if(perm==='default'&&!localStorage.getItem('wc2026_push_dismissed')){
       setTimeout(()=>document.getElementById('pwaBanner')?.classList.add('show'),3000);
