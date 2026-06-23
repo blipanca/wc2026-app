@@ -873,7 +873,7 @@ function predictMatch(homeTeam, awayTeam, isNeutral=false){
   const homeXg=parseFloat(((home.avgGoalsScored+(home.attackRating-away.defenseRating)*.02)*.85).toFixed(1));
   const awayXg=parseFloat(((away.avgGoalsScored+(away.attackRating-home.defenseRating)*.02)*.75).toFixed(1));
   const rankDiff=Math.abs(home.fifaRank-away.fifaRank);
-  const confidence=rankDiff>30?'Tinggi':rankDiff>15?'Sedang':'Rendah';
+  const confidence=rankDiff>30?'High':rankDiff>15?'Medium':'Low';
   const confidencePct=Math.min(85,45+rankDiff*.8);
   const keyFactors=[];
   if(homeTotal>awayTotal+10)keyFactors.push(`${homeTeam} holds a significant FIFA ranking advantage`);
@@ -1204,7 +1204,7 @@ function renderBroadcastSection(utcTs){
   return`<div class="bc-section"><div class="bc-section-title">📡 How to Watch</div>
   <div style="margin-bottom:9px"><div style="font-size:11px;color:var(--text2);margin-bottom:6px">📺 Free TV (Free to Air)</div><div style="display:flex;gap:6px;flex-wrap:wrap">${bc.tvChannels.map(c=>`<span class="bc-badge tv" style="font-size:12px;padding:5px 10px">📺 ${c}</span>`).join('')}</div></div>
   <div style="font-size:11px;color:var(--text2);margin-bottom:7px">📱 Official Live Streaming</div>
-  <div class="bc-grid">${bc.streaming.map(s=>`<div class="bc-item"><div class="bc-item-name">${s.icon} ${s.name}</div><div class="bc-item-detail">${s.platform}</div><div class="bc-item-price${s.price.toLowerCase().includes('gratis')?'':' paid'}">${s.price}</div><a class="bc-open-btn" href="${s.url}" target="_blank" rel="noopener">Buka ↗</a></div>`).join('')}</div>
+  <div class="bc-grid">${bc.streaming.map(s=>`<div class="bc-item"><div class="bc-item-name">${s.icon} ${s.name}</div><div class="bc-item-detail">${s.platform}</div><div class="bc-item-price${s.price.toLowerCase().includes('gratis')?'':' paid'}">${s.price}</div><a class="bc-open-btn" href="${s.url}" target="_blank" rel="noopener">Open ↗</a></div>`).join('')}</div>
   <div style="font-size:10px;color:var(--text3);margin-top:9px;line-height:1.5">✅ TVRI holds official exclusive WC 2026 broadcast rights — all 104 matches free</div></div>`;
 }
 
@@ -1474,7 +1474,7 @@ function setSchedFlt(g){activeSchedFlt=g;renderSched();document.getElementById('
 function renderGrups(){
   document.getElementById('grpBtns').innerHTML=Object.keys(GROUPS).map(g=>`<button class="grp-btn${g===activeGrp?' active':''}" onclick="setGrp('${g}')">${g}</button>`).join('');
   const st=computeStandings();const rows=sortGroup(Object.values(st[activeGrp]||{}));const gd=GROUPS[activeGrp];
-  let h=`<table class="st-table"><thead><tr><th class="tl" style="width:22px">#</th><th class="tl">Tim</th><th style="width:22px">M</th><th style="width:22px">M</th><th style="width:22px">S</th><th style="width:22px">K</th><th style="width:28px">GD</th><th class="pts-col" style="width:32px">Pts</th></tr></thead><tbody>`;
+  let h=`<table class="st-table"><thead><tr><th class="tl" style="width:22px">#</th><th class="tl">Team</th><th style="width:22px">P</th><th style="width:22px">W</th><th style="width:22px">D</th><th style="width:22px">L</th><th style="width:28px">GD</th><th class="pts-col" style="width:32px">Pts</th></tr></thead><tbody>`;
   rows.forEach((r,i)=>{
     const cls=i<2?'q1':i===2?'q3':'';
     h+=`<tr class="${cls}"><td class="tl">${i+1}</td><td class="tl"><div class="st-tf"><span class="st-flag">${gd.f[r.team]||'🏳'}</span>${r.team}</div></td><td>${r.pl}</td><td>${r.w}</td><td>${r.d}</td><td>${r.l}</td><td>${r.gd>0?'+':''}${r.gd}</td><td class="pts-col">${r.pts}</td></tr>`;
@@ -1647,13 +1647,13 @@ function renderStats(){
     const sorted=[...combinedStats].filter(p=>p.goals>0).sort((a,b)=>b.goals-a.goals||b.assists-a.assists);
     if(!sorted.length){out.innerHTML=emptyHtml('<circle cx="12" cy="12" r="10"/>','No goal data yet','');return;}
     let h=srcBadge+`<div class="sec-lbl">⚽ Top Goalscorers — ${total} matches</div>`;
-    sorted.forEach((p,i)=>{h+=`<div class="player-row" onclick="openPlayerModal('${p.name}','${p.team}')" style="cursor:pointer"><div class="p-rank ${rankCls(i)}">${rankIco(i)}</div><div class="p-flag">${p.flag}</div><div class="p-info"><div class="p-name">${p.name} <span style='font-size:11px;color:var(--text3)'>↗</span></div><div class="p-team">${p.team} · ${p.pos}</div><div class="p-chips">${p.assists>0?`<span class="p-chip blue">🎯 ${p.assists} assists</span>`:''}<span class="p-chip">${p.mins}' played</span></div></div><div class="p-stat"><div class="p-val">${p.goals}</div><div class="p-lbl">GOL</div></div></div>`;});
+    sorted.forEach((p,i)=>{h+=`<div class="player-row" onclick="openPlayerModal('${p.name}','${p.team}')" style="cursor:pointer"><div class="p-rank ${rankCls(i)}">${rankIco(i)}</div><div class="p-flag">${p.flag}</div><div class="p-info"><div class="p-name">${p.name} <span style='font-size:11px;color:var(--text3)'>↗</span></div><div class="p-team">${p.team} · ${p.pos}</div><div class="p-chips">${p.assists>0?`<span class="p-chip blue">🎯 ${p.assists} assists</span>`:''}<span class="p-chip">${p.mins}' played</span></div></div><div class="p-stat"><div class="p-val">${p.goals}</div><div class="p-lbl">GOALS</div></div></div>`;});
     out.innerHTML=h;
   }else if(activeStTab==='assists'){
     const sorted=[...combinedStats].filter(p=>p.assists>0).sort((a,b)=>b.assists-a.assists||b.goals-a.goals);
     if(!sorted.length){out.innerHTML=emptyHtml('<circle cx="12" cy="12" r="10"/>','No assist data yet','');return;}
     let h=`<div class="sec-lbl">🎯 Top Pengumpan</div>`;
-    sorted.forEach((p,i)=>{h+=`<div class="player-row" onclick="openPlayerModal('${p.name}','${p.team}')" style="cursor:pointer"><div class="p-rank ${rankCls(i)}">${rankIco(i)}</div><div class="p-flag">${p.flag}</div><div class="p-info"><div class="p-name">${p.name} <span style='font-size:11px;color:var(--text3)'>↗</span></div><div class="p-team">${p.team} · ${p.pos}</div><div class="p-chips">${p.goals>0?`<span class="p-chip green">⚽ ${p.goals} gol</span>`:''}<span class="p-chip">${p.mins}' played</span></div></div><div class="p-stat"><div class="p-val">${p.assists}</div><div class="p-lbl">ASSIST</div></div></div>`;});
+    sorted.forEach((p,i)=>{h+=`<div class="player-row" onclick="openPlayerModal('${p.name}','${p.team}')" style="cursor:pointer"><div class="p-rank ${rankCls(i)}">${rankIco(i)}</div><div class="p-flag">${p.flag}</div><div class="p-info"><div class="p-name">${p.name} <span style='font-size:11px;color:var(--text3)'>↗</span></div><div class="p-team">${p.team} · ${p.pos}</div><div class="p-chips">${p.goals>0?`<span class="p-chip green">⚽ ${p.goals} goals</span>`:''}<span class="p-chip">${p.mins}' played</span></div></div><div class="p-stat"><div class="p-val">${p.assists}</div><div class="p-lbl">ASSISTS</div></div></div>`;});
     out.innerHTML=h;
   }else{
     const tm={};
@@ -1663,7 +1663,7 @@ function renderStats(){
     const maxGf=Math.max(...teams.map(t=>t.gf),1);
     let h=`<div class="sec-lbl">🛡️ Team Stats</div>`;
     for(const t of teams){const gd=t.gf-t.ga,gdl=gd>0?'+'+gd:String(gd);const bar=Math.round(t.gf/maxGf*100);
-      h+=`<div class="player-row" style="flex-direction:column;align-items:stretch;gap:8px"><div style="display:flex;align-items:center;gap:10px"><span style="font-size:26px">${t.flag}</span><div style="flex:1"><div class="p-name">${t.team}</div><div class="p-chips" style="margin-top:5px"><span class="p-chip">⚽ ${t.gf} gol</span><span class="p-chip">🔒 ${t.ga} kemasukan</span><span class="p-chip">GD ${gdl}</span>${t.cs>0?'<span class="p-chip green">🧤 Clean sheet</span>':''}</div></div><div class="p-stat"><div class="p-val">${t.gf}</div><div class="p-lbl">GOL</div></div></div><div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden"><div style="height:100%;width:${bar}%;background:var(--red);border-radius:3px;transition:width .4s"></div></div></div>`;
+      h+=`<div class="player-row" style="flex-direction:column;align-items:stretch;gap:8px"><div style="display:flex;align-items:center;gap:10px"><span style="font-size:26px">${t.flag}</span><div style="flex:1"><div class="p-name">${t.team}</div><div class="p-chips" style="margin-top:5px"><span class="p-chip">⚽ ${t.gf} goals</span><span class="p-chip">🔒 ${t.ga} conceded</span><span class="p-chip">GD ${gdl}</span>${t.cs>0?'<span class="p-chip green">🧤 Clean sheet</span>':''}</div></div><div class="p-stat"><div class="p-val">${t.gf}</div><div class="p-lbl">GOALS</div></div></div><div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden"><div style="height:100%;width:${bar}%;background:var(--red);border-radius:3px;transition:width .4s"></div></div></div>`;
     }
     out.innerHTML=h;
   }
@@ -1989,9 +1989,11 @@ function isClinched(grp, teamName, targetPos, st){
   const sorted = finalRows.sort((a,b)=>b.pts-a.pts||b.gd-a.gd||b.gf-a.gf||a.team.localeCompare(b.team));
   const teamFinalPos = sorted.findIndex(r=>r.team===teamName);
 
-  // Tim dianggap "clinched" di posisi targetPos jika bahkan di skenario
-  // terburuk, posisinya tetap <= targetPos (artinya tetap lolos)
-  return teamFinalPos <= targetPos;
+  // PENTING: targetPos di sini adalah posisi SLOT yang sedang dicek (0=juara, 1=runner-up),
+  // TAPI baik juara maupun runner-up SAMA-SAMA lolos ke Round of 32 (top-2 grup).
+  // Jadi syarat "clinched" yang benar adalah: posisi terburuk tim tetap <= 1 (top-2),
+  // BUKAN <= targetPos (yang akan salah untuk slot runner-up/posisi 1).
+  return teamFinalPos <= 1;
 }
 
 // ════════════════════════════════════════════════════════════════════════
@@ -2136,7 +2138,7 @@ function renderModalStats(m){
   }
   if(stats.rating)h+=`<div class="stat-section-title">⭐ Pemain Terbaik</div><div style="display:flex;gap:8px"><div class="stat-player-chip" style="flex:1"><div class="stat-player-name">${stats.topPlayer.home}<span class="stat-player-rating">${stats.rating.home.split(' ')[1]||'?'}</span></div><div class="stat-player-detail">${flag(m.home)} ${m.home}</div></div><div class="stat-player-chip" style="flex:1"><div class="stat-player-name">${stats.topPlayer.away}<span class="stat-player-rating" style="background:var(--amber)">${stats.rating.away.split(' ')[1]||'?'}</span></div><div class="stat-player-detail">${flag(m.away)} ${m.away}</div></div></div>`;
   if(stats.attendance)h+=`<div class="stat-notes">🏟 ${stats.stadium||m.venue} · Attendance: ${stats.attendance.toLocaleString('en-US')}${stats.notes?'\n'+stats.notes:''}</div>`;
-  h+=`<div class="bc-section" style="margin-top:10px"><div class="bc-section-title">🔄 Tonton Ulang</div><div style="display:flex;gap:7px"><a class="bc-open-btn" style="flex:1;padding:8px;font-size:12px" href="https://folaplay.id" target="_blank">📺 Fola Play</a><a class="bc-open-btn" style="flex:1;padding:8px;font-size:12px" href="https://maxstream.tv" target="_blank">📱 MAXstream</a><a class="bc-open-btn" style="flex:1;padding:8px;font-size:12px" href="https://www.fifa.com/fifaplus" target="_blank">⚽ FIFA+</a></div></div>`;
+  h+=`<div class="bc-section" style="margin-top:10px"><div class="bc-section-title">🔄 Watch Again</div><div style="display:flex;gap:7px"><a class="bc-open-btn" style="flex:1;padding:8px;font-size:12px" href="https://folaplay.id" target="_blank">📺 Fola Play</a><a class="bc-open-btn" style="flex:1;padding:8px;font-size:12px" href="https://maxstream.tv" target="_blank">📱 MAXstream</a><a class="bc-open-btn" style="flex:1;padding:8px;font-size:12px" href="https://www.fifa.com/fifaplus" target="_blank">⚽ FIFA+</a></div></div>`;
   document.getElementById('modalBody').innerHTML=h;
 }
 
@@ -2281,7 +2283,7 @@ function openPlayerModal(name, teamName){
     <div>
       <div style="font-size:18px;font-weight:700">${name}</div>
       <div style="font-size:13px;color:var(--text2);margin-top:3px">${teamName}${profile?` · #${profile.no} · ${profile.pos||p?.pos||''}`:p?' · '+p.pos:''}</div>
-      ${profile?`<div style="font-size:12px;color:var(--text3);margin-top:2px">${profile.club} · Lahir ${profile.born}</div>`:''}
+      ${profile?`<div style="font-size:12px;color:var(--text3);margin-top:2px">${profile.club} · Born ${profile.born}</div>`:''}
     </div>
   </div>`;
 
@@ -2290,7 +2292,7 @@ function openPlayerModal(name, teamName){
     h += `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
       <div style="text-align:center;background:var(--bg);border-radius:10px;padding:10px 6px">
         <div style="font-size:22px;font-weight:700;color:var(--red)">${p.goals}</div>
-        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em">Gol</div>
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em">Goals</div>
       </div>
       <div style="text-align:center;background:var(--bg);border-radius:10px;padding:10px 6px">
         <div style="font-size:22px;font-weight:700;color:var(--blue)">${p.assists}</div>
@@ -2298,7 +2300,7 @@ function openPlayerModal(name, teamName){
       </div>
       <div style="text-align:center;background:var(--bg);border-radius:10px;padding:10px 6px">
         <div style="font-size:22px;font-weight:700">${p.mins}'</div>
-        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em">Menit</div>
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em">Minutes</div>
       </div>
       <div style="text-align:center;background:var(--bg);border-radius:10px;padding:10px 6px">
         <div style="font-size:22px;font-weight:700;color:var(--amber)">${profile?.caps||'—'}</div>
@@ -2311,10 +2313,10 @@ function openPlayerModal(name, teamName){
   if(profile){
     h += `<div style="border-top:0.5px solid var(--border);padding-top:12px;display:flex;flex-direction:column;gap:8px">`;
     const rows = [
-      ['⚽ Total Gol WC', profile.wcGoals||0],
-      ['👟 Kaki Dominan', profile.foot||'—'],
-      ['📏 Tinggi', profile.height||'—'],
-      ['🏟 Klub', profile.club||'—'],
+      ['⚽ Total WC Goals', profile.wcGoals||0],
+      ['👟 Preferred Foot', profile.foot||'—'],
+      ['📏 Height', profile.height||'—'],
+      ['🏟 Club', profile.club||'—'],
     ];
     for(const[label,val]of rows){
       h+=`<div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--text2)">${label}</span><strong>${val}</strong></div>`;
@@ -2328,7 +2330,7 @@ function openPlayerModal(name, teamName){
   // Matches played
   const played = MATCHES.filter(m=>m.st==='done'&&(m.home===teamName||m.away===teamName));
   if(played.length){
-    h += `<div style="margin-top:14px;font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Pertandingan WC 2026</div>`;
+    h += `<div style="margin-top:14px;font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">WC 2026 Matches</div>`;
     for(const m of played){
       const isHome=m.home===teamName;
       const tf=fmtTime(m.utc);
@@ -2343,7 +2345,7 @@ function openPlayerModal(name, teamName){
   }
 
   // Show in modal
-  document.getElementById('modalTitle').innerHTML = `👤 Profil Pemain`;
+  document.getElementById('modalTitle').innerHTML = `👤 Player Profile`;
   document.getElementById('modalSubtitle').textContent = '';
   document.getElementById('modalTabs').innerHTML = '';
   document.getElementById('modalBody').innerHTML = h;
