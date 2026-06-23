@@ -468,7 +468,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 
     <!-- HIGHLIGHTS -->
     <div id="pg-hl" class="page">
-      <div class="info-box">📺 Highlights resmi FIFA & FOX Sports. Tap thumbnail untuk putar langsung.</div>
+      <div class="info-box">📺 Official highlights from FIFA & FOX Sports. Tap a thumbnail to play directly.</div>
       <div id="hlOut"></div>
     </div>
 
@@ -512,7 +512,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 
     <!-- PREDICTION -->
     <div id="pg-pred" class="page">
-      <div class="info-box">🔮 Prediksi berbasis <strong>FIFA Ranking Jun 2026</strong>, form terkini, fitness pemain kunci, dan hasil WC 2026.</div>
+      <div class="info-box">🔮 Prediction based on <strong>FIFA Ranking Jun 2026</strong>, current form, key player fitness, and WC 2026 results.</div>
       <div id="predOut"></div>
     </div>
 
@@ -642,7 +642,7 @@ let MATCHES = [
   {id:'D6',group:'D',utc:1782439200,home:'Paraguay',away:'Australia',sh:null,sa:null,st:'upcoming',venue:'Levis Stadium, Santa Clara',scorers:'',yt:''},
   {id:'E1',group:'E',utc:1781456400,home:'Germany',away:'Curaçao',sh:7,sa:1,st:'done',venue:'NRG Stadium, Houston',scorers:"Nmecha 6', Schlotterbeck 38', Havertz 45+' pen & 88', Musiala 47', Brown 68', Undav 78' / Comenencia 21'",yt:'rVabIXAiZQI'},
   {id:'E2',group:'E',utc:1781478000,home:'Ivory Coast',away:'Ecuador',sh:1,sa:0,st:'done',venue:'Lincoln Financial Field, Philadelphia',scorers:"Haller 67' / —",yt:'oE5tRYnN7vw'},
-  {id:'E3',group:'E',utc:1781985600,home:'Germany',away:'Ivory Coast',sh:null,sa:null,st:'upcoming',venue:'BMO Field, Toronto',scorers:'',yt:''},
+  {id:'E3',group:'E',utc:1781985600,home:'Germany',away:'Ivory Coast',sh:2,sa:1,st:'done',venue:'BMO Field, Toronto',scorers:"Undav 68', Undav 90+4' / Kessie 30'",yt:''},
   {id:'E4',group:'E',utc:1782000000,home:'Ecuador',away:'Curaçao',sh:0,sa:0,st:'done',venue:'Arrowhead Stadium, Kansas City',scorers:"— / —",yt:''},
   {id:'E5',group:'E',utc:1782417600,home:'Ecuador',away:'Germany',sh:null,sa:null,st:'upcoming',venue:'MetLife Stadium, New York/NJ',scorers:'',yt:''},
   {id:'E6',group:'E',utc:1782417600,home:'Curaçao',away:'Ivory Coast',sh:null,sa:null,st:'upcoming',venue:'Lincoln Financial Field, Philadelphia',scorers:'',yt:''},
@@ -876,10 +876,10 @@ function predictMatch(homeTeam, awayTeam, isNeutral=false){
   const confidence=rankDiff>30?'Tinggi':rankDiff>15?'Sedang':'Rendah';
   const confidencePct=Math.min(85,45+rankDiff*.8);
   const keyFactors=[];
-  if(homeTotal>awayTotal+10)keyFactors.push(`${homeTeam} unggul signifikan di FIFA ranking`);
-  if(awayTotal>homeTotal+10)keyFactors.push(`${awayTeam} unggul signifikan di FIFA ranking`);
-  if(homeFormScore>awayFormScore+20)keyFactors.push(`${homeTeam} dalam form lebih baik`);
-  if(awayFormScore>homeFormScore+20)keyFactors.push(`${awayTeam} dalam form lebih baik`);
+  if(homeTotal>awayTotal+10)keyFactors.push(`${homeTeam} holds a significant FIFA ranking advantage`);
+  if(awayTotal>homeTotal+10)keyFactors.push(`${awayTeam} holds a significant FIFA ranking advantage`);
+  if(homeFormScore>awayFormScore+20)keyFactors.push(`${homeTeam} is in better form`);
+  if(awayFormScore>homeFormScore+20)keyFactors.push(`${awayTeam} is in better form`);
   home.keyPlayers.filter(p=>p.fitness<80).forEach(p=>keyFactors.push(`⚠ ${homeTeam}: ${p.name} fitness terbatas`));
   away.keyPlayers.filter(p=>p.fitness<80).forEach(p=>keyFactors.push(`⚠ ${awayTeam}: ${p.name} fitness terbatas`));
   if(!isNeutral)keyFactors.push(`${homeTeam} bermain sebagai tuan rumah lokal`);
@@ -1201,11 +1201,11 @@ function renderBroadcastBadge(utcTs){
 }
 function renderBroadcastSection(utcTs){
   const bc=getBroadcastInfo(utcTs);
-  return`<div class="bc-section"><div class="bc-section-title">📡 Cara Nonton di Indonesia</div>
-  <div style="margin-bottom:9px"><div style="font-size:11px;color:var(--text2);margin-bottom:6px">📺 TV Gratis (Free to Air)</div><div style="display:flex;gap:6px;flex-wrap:wrap">${bc.tvChannels.map(c=>`<span class="bc-badge tv" style="font-size:12px;padding:5px 10px">📺 ${c}</span>`).join('')}</div></div>
-  <div style="font-size:11px;color:var(--text2);margin-bottom:7px">📱 Live Streaming Resmi</div>
+  return`<div class="bc-section"><div class="bc-section-title">📡 How to Watch</div>
+  <div style="margin-bottom:9px"><div style="font-size:11px;color:var(--text2);margin-bottom:6px">📺 Free TV (Free to Air)</div><div style="display:flex;gap:6px;flex-wrap:wrap">${bc.tvChannels.map(c=>`<span class="bc-badge tv" style="font-size:12px;padding:5px 10px">📺 ${c}</span>`).join('')}</div></div>
+  <div style="font-size:11px;color:var(--text2);margin-bottom:7px">📱 Official Live Streaming</div>
   <div class="bc-grid">${bc.streaming.map(s=>`<div class="bc-item"><div class="bc-item-name">${s.icon} ${s.name}</div><div class="bc-item-detail">${s.platform}</div><div class="bc-item-price${s.price.toLowerCase().includes('gratis')?'':' paid'}">${s.price}</div><a class="bc-open-btn" href="${s.url}" target="_blank" rel="noopener">Buka ↗</a></div>`).join('')}</div>
-  <div style="font-size:10px;color:var(--text3);margin-top:9px;line-height:1.5">✅ TVRI hak siar eksklusif resmi WC 2026 — 104 matches gratis</div></div>`;
+  <div style="font-size:10px;color:var(--text3);margin-top:9px;line-height:1.5">✅ TVRI holds official exclusive WC 2026 broadcast rights — all 104 matches free</div></div>`;
 }
 
 // ── Prediction helpers ────────────────────────────────────────
@@ -1279,7 +1279,7 @@ function renderLive(){
   if(today.length){h+=`<div class="sec-lbl">📅 Today's Matches</div>`;today.forEach(m=>{h+=matchCard(m);});}
   if(nextDay.length){
     const d=new Date(nearDt+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',day:'numeric',month:'long'});
-    h+=`<div class="sec-lbl">⏰ Berikutnya — ${d}</div>`;
+    h+=`<div class="sec-lbl">⏰ Next — ${d}</div>`;
     nextDay.forEach(m=>{h+=matchCard(m);});
   }
   if(recent.length){h+=`<div class="sec-lbl">✅ Latest Results</div>`;recent.forEach(m=>{h+=matchCard(m,{showHl:true});});}
@@ -1412,7 +1412,7 @@ function genNotifs(){
   return MATCHES.flatMap(m=>{
     const items=[];
     if(m.st==='done'&&!dismissedSet.has('r_'+m.id)){
-      const win=m.sh>m.sa?'🏆 '+m.home+' won':m.sh<m.sa?'🏆 '+m.away+' won':'Seri';
+      const win=m.sh>m.sa?'🏆 '+m.home+' won':m.sh<m.sa?'🏆 '+m.away+' won':'Draw';
       items.push({id:'r_'+m.id,type:'result',title:'Result: '+m.home+' vs '+m.away,body:win+' — '+m.sh+' : '+m.sa+(m.scorers?'\n⚽ '+m.scorers:''),time:'Grup '+m.group+' · '+fmtTime(m.utc).date});
     }
     if(m.st==='live'&&!dismissedSet.has('l_'+m.id))items.push({id:'l_'+m.id,type:'live',title:'🔴 LIVE: '+m.home+' vs '+m.away,body:'Sedang berlangsung · '+m.venue,time:'Grup '+m.group});
@@ -1694,17 +1694,17 @@ function renderPred(){
           <div class="pred-prob-bar-wrap"><div class="pred-prob-bar home" style="width:${pred.homeWinProb}%"><span class="pred-prob-pct">${pred.homeWinProb}%</span></div><div class="pred-prob-bar draw" style="width:${pred.drawProb}%"><span class="pred-prob-pct">${pred.drawProb}%</span></div><div class="pred-prob-bar away" style="width:${pred.awayWinProb}%"><span class="pred-prob-pct">${pred.awayWinProb}%</span></div></div>
           <span class="pred-prob-label right">${activePredMatch.away}</span>
         </div>
-        <div class="pred-prob-legend"><span class="pred-leg-item"><span class="pred-leg-dot home"></span>Menang ${pred.homeWinProb}%</span><span class="pred-leg-item"><span class="pred-leg-dot draw"></span>Seri ${pred.drawProb}%</span><span class="pred-leg-item"><span class="pred-leg-dot away"></span>Menang ${pred.awayWinProb}%</span></div>
+        <div class="pred-prob-legend"><span class="pred-leg-item"><span class="pred-leg-dot home"></span>Win ${pred.homeWinProb}%</span><span class="pred-leg-item"><span class="pred-leg-dot draw"></span>Draw ${pred.drawProb}%</span><span class="pred-leg-item"><span class="pred-leg-dot away"></span>Win ${pred.awayWinProb}%</span></div>
       </div>
       <div class="pred-xg-row">
         <div class="pred-xg-col"><div class="pred-xg-val">${pred.homeXg}</div><div class="pred-xg-lbl">xG</div></div>
         <div class="pred-xg-col"><div class="pred-confidence" style="color:${pred.confidencePct>65?'var(--green)':pred.confidencePct>50?'var(--amber)':'var(--text3)'}">Confidence ${pred.confidence}</div><div class="pred-conf-bar-bg"><div class="pred-conf-bar" style="width:${pred.confidencePct}%"></div></div><div style="font-size:10px;color:var(--text3);margin-top:2px">${pred.confidencePct}% akurasi</div></div>
         <div class="pred-xg-col" style="text-align:right"><div class="pred-xg-val">${pred.awayXg}</div><div class="pred-xg-lbl">xG</div></div>
       </div>
-      ${pred.keyFactors.length?`<div class="pred-factors"><div class="pred-factors-title">🔑 Faktor Kunci</div>${pred.keyFactors.map(f=>`<div class="pred-factor-item">• ${f}</div>`).join('')}</div>`:''}
-      <div class="pred-ratings"><div class="pred-ratings-title">📊 Perbandingan</div>${renderRatingBar('Serangan',hd.attackRating,ad.attackRating)}${renderRatingBar('Pertahanan',hd.defenseRating,ad.defenseRating)}${renderRatingBar('Gelandang',hd.midfieldRating,ad.midfieldRating)}</div>
+      ${pred.keyFactors.length?`<div class="pred-factors"><div class="pred-factors-title">🔑 Key Factors</div>${pred.keyFactors.map(f=>`<div class="pred-factor-item">• ${f}</div>`).join('')}</div>`:''}
+      <div class="pred-ratings"><div class="pred-ratings-title">📊 Comparison</div>${renderRatingBar('Attack',hd.attackRating,ad.attackRating)}${renderRatingBar('Defense',hd.defenseRating,ad.defenseRating)}${renderRatingBar('Midfield',hd.midfieldRating,ad.midfieldRating)}</div>
       <div class="pred-players"><div class="pred-half"><div class="pred-players-title">${activePredMatch.home}</div>${hd.keyPlayers.slice(0,3).map(p=>renderPlayerChip(p)).join('')}${hd.notes?`<div class="pred-team-note">${hd.notes}</div>`:''}</div><div class="pred-half"><div class="pred-players-title">${activePredMatch.away}</div>${ad.keyPlayers.slice(0,3).map(p=>renderPlayerChip(p)).join('')}${ad.notes?`<div class="pred-team-note">${ad.notes}</div>`:''}</div></div>
-      <div style="font-size:10px;color:var(--text3);text-align:center;padding:10px 14px">⚠ Prediksi analitis — bukan jaminan hasil. Data: FIFA Jun 2026 + WC 2026 matchday.</div>
+      <div style="font-size:10px;color:var(--text3);text-align:center;padding:10px 14px">⚠ Analytical prediction — not a guaranteed outcome. Data: FIFA Jun 2026 + WC 2026 matchday.</div>
     </div>`;
   }
   document.getElementById('predOut').innerHTML=h;
@@ -1898,10 +1898,10 @@ function renderAdmin(){
       <div class="admin-feedback" id="adminFeedback"></div>
     </div>
     <div class="admin-panel">
-      <div class="admin-title">📊 Update Statistik Pertandingan</div>
+      <div class="admin-title">📊 Update Match Stats</div>
       <div class="admin-row"><label class="admin-label">Match ID</label><select class="admin-select" id="adminStatMatch">${MATCHES.filter(m=>m.st==='done').map(m=>`<option value="${m.id}">${m.id}: ${m.home} ${m.sh}-${m.sa} ${m.away}</option>`).join('')}</select></div>
       <div class="admin-row"><label class="admin-label">Possession Home (%)</label><input class="admin-input" id="sPosH" type="number" min="0" max="100" value="50"></div>
-      <div class="admin-row"><label class="admin-label">Tembakan (Home : Away)</label><div class="admin-score-row"><input class="admin-score-input" id="sShotH" type="number" value="10"><span class="admin-score-sep">:</span><input class="admin-score-input" id="sShotA" type="number" value="8"></div></div>
+      <div class="admin-row"><label class="admin-label">Shots (Home : Away)</label><div class="admin-score-row"><input class="admin-score-input" id="sShotH" type="number" value="10"><span class="admin-score-sep">:</span><input class="admin-score-input" id="sShotA" type="number" value="8"></div></div>
       <div class="admin-row"><label class="admin-label">Attendance</label><input class="admin-input" id="sAttend" type="number" placeholder="75000"></div>
       <div class="admin-row"><label class="admin-label">Catatan</label><input class="admin-input" id="sNotes" type="text" placeholder="Highlight matches..."></div>
       <button class="admin-btn primary" onclick="adminSaveStats()">💾 Simpan Statistik</button>
@@ -2107,7 +2107,7 @@ function renderModal(){
   const tf=fmtTime(m.utc);
   document.getElementById('modalTitle').innerHTML=`${flag(m.home)} ${m.home} <span style="color:var(--text3)">vs</span> ${m.away} ${flag(m.away)}`;
   document.getElementById('modalSubtitle').textContent=`Group ${m.group} · ${tf.full} · ${m.venue}`;
-  const tabs=isDone?[{id:'stats',label:'📊 Statistik'},{id:'pred',label:'🔮 Simulasi'}]:[{id:'pred',label:'🔮 Prediksi'},{id:'bc',label:'📡 Siaran'}];
+  const tabs=isDone?[{id:'stats',label:'📊 Stats'},{id:'pred',label:'🔮 Simulation'}]:[{id:'pred',label:'🔮 Prediction'},{id:'bc',label:'📡 Broadcast'}];
   if(!tabs.find(t=>t.id===modalTabId))modalTabId=tabs[0].id;
   document.getElementById('modalTabs').innerHTML=tabs.map(t=>`<button class="modal-tab${t.id===modalTabId?' active':''}" onclick="setModalTab('${t.id}')">${t.label}</button>`).join('');
   if(modalTabId==='stats')renderModalStats(m);
@@ -2119,15 +2119,15 @@ function renderModalStats(m){
   const stats=MATCH_STATS_DB[m.id];
   const sh=m.sh!==null?m.sh:'–',sa=m.sa!==null?m.sa:'–';
   let h=`<div class="mstat-hero"><div class="mstat-team"><div class="mstat-flag">${flag(m.home)}</div><div class="mstat-name">${m.home}</div></div><div class="mstat-score-center"><div class="mstat-score">${sh} : ${sa}</div><div class="mstat-status">${m.st==='done'?'⏱ Full Time':m.st==='live'?'● Live':'Not started'}</div></div><div class="mstat-team"><div class="mstat-flag">${flag(m.away)}</div><div class="mstat-name">${m.away}</div></div></div>`;
-  if(m.scorers)h+=`<div class="stat-section-title">⚽ Pencetak Gol</div><div class="stat-scorers-row"><div class="stat-scorers-col">${flag(m.home)} ${m.scorers.split(' / ')[0]||'—'}</div><div class="stat-scorers-col" style="text-align:right">${m.scorers.split(' / ')[1]||'—'} ${flag(m.away)}</div></div>`;
+  if(m.scorers)h+=`<div class="stat-section-title">⚽ Goalscorers</div><div class="stat-scorers-row"><div class="stat-scorers-col">${flag(m.home)} ${m.scorers.split(' / ')[0]||'—'}</div><div class="stat-scorers-col" style="text-align:right">${m.scorers.split(' / ')[1]||'—'} ${flag(m.away)}</div></div>`;
 
   // Share button
-  h+=`<button class="mc-hl-btn" onclick="shareResult('${m.id}')" style="margin-bottom:10px">📤 Bagikan Hasil</button>`;
+  h+=`<button class="mc-hl-btn" onclick="shareResult('${m.id}')" style="margin-bottom:10px">📤 Share Result</button>`;
 
   if(!stats){h+=`<div class="stat-notes">Detailed stats not available yet.</div>`;document.getElementById('modalBody').innerHTML=h;return;}
   h+=`<div class="stat-section-title">📊 Statistik Pertandingan</div>`;
-  h+=`<div class="stat-duel" style="height:10px;margin-bottom:3px"><div class="stat-duel-home" style="width:${stats.possession?.home||50}%"></div><div class="stat-duel-away" style="width:${stats.possession?.away||50}%"></div></div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:12px"><span>${stats.possession?.home||0}% Penguasaan</span><span>${stats.possession?.away||0}%</span></div>`;
-  const rows=[['Tembakan',stats.shots?.home,stats.shots?.away],['Tepat Sasaran',stats.shotsOnTarget?.home,stats.shotsOnTarget?.away],['xG',stats.xG?.home,stats.xG?.away],['Peluang Besar',stats.bigChances?.home,stats.bigChances?.away],['Penyelamatan',stats.saves?.home,stats.saves?.away],['Corners',stats.corners?.home,stats.corners?.away],['Kartu Kuning',stats.yellowCards?.home,stats.yellowCards?.away],['Kartu Merah',stats.redCards?.home,stats.redCards?.away],['Akurasi Umpan (%)',stats.passAccuracy?.home,stats.passAccuracy?.away]];
+  h+=`<div class="stat-duel" style="height:10px;margin-bottom:3px"><div class="stat-duel-home" style="width:${stats.possession?.home||50}%"></div><div class="stat-duel-away" style="width:${stats.possession?.away||50}%"></div></div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:12px"><span>${stats.possession?.home||0}% Possession</span><span>${stats.possession?.away||0}%</span></div>`;
+  const rows=[['Shots',stats.shots?.home,stats.shots?.away],['Shots on Target',stats.shotsOnTarget?.home,stats.shotsOnTarget?.away],['xG',stats.xG?.home,stats.xG?.away],['Big Chances',stats.bigChances?.home,stats.bigChances?.away],['Saves',stats.saves?.home,stats.saves?.away],['Corners',stats.corners?.home,stats.corners?.away],['Yellow Cards',stats.yellowCards?.home,stats.yellowCards?.away],['Red Cards',stats.redCards?.home,stats.redCards?.away],['Pass Accuracy (%)',stats.passAccuracy?.home,stats.passAccuracy?.away]];
   for(const[label,hv,av]of rows){
     if(hv===undefined)continue;
     const total=hv+av||1,hp=Math.round(hv/total*100);
@@ -2143,12 +2143,12 @@ function renderModalStats(m){
 function renderModalPred(m){
   const pred=predictMatch(m.home,m.away,true);const hd=pred.homeData,ad=pred.awayData;const isDone=m.st==='done';
   let h='';
-  if(isDone)h+=`<div style="background:rgba(22,163,74,.08);border:0.5px solid rgba(22,163,74,.25);border-radius:10px;padding:10px 13px;margin-bottom:12px;font-size:12px;color:var(--green)">ℹ Simulasi retroaktif. Hasil aktual: <strong>${m.home} ${m.sh}–${m.sa} ${m.away}</strong></div>`;
+  if(isDone)h+=`<div style="background:rgba(22,163,74,.08);border:0.5px solid rgba(22,163,74,.25);border-radius:10px;padding:10px 13px;margin-bottom:12px;font-size:12px;color:var(--green)">ℹ Retroactive simulation. Actual result: <strong>${m.home} ${m.sh}–${m.sa} ${m.away}</strong></div>`;
   h+=`<div class="pred-header" style="margin-bottom:12px"><div class="pred-team-col"><div class="pred-flag">${flag(m.home)}</div><div class="pred-name">${m.home}</div><div class="pred-rank">FIFA #${hd.fifaRank}</div></div><div class="pred-vs-col"><div class="pred-score-pred">${pred.predictedScore}</div><div class="pred-vs-label">Score Prediction</div></div><div class="pred-team-col"><div class="pred-flag">${flag(m.away)}</div><div class="pred-name">${m.away}</div><div class="pred-rank">FIFA #${ad.fifaRank}</div></div></div>
-  <div class="pred-prob-section" style="background:var(--bg);border-radius:10px;margin-bottom:10px"><div class="pred-prob-row"><span class="pred-prob-label">${m.home}</span><div class="pred-prob-bar-wrap"><div class="pred-prob-bar home" style="width:${pred.homeWinProb}%"><span class="pred-prob-pct">${pred.homeWinProb}%</span></div><div class="pred-prob-bar draw" style="width:${pred.drawProb}%"><span class="pred-prob-pct">${pred.drawProb}%</span></div><div class="pred-prob-bar away" style="width:${pred.awayWinProb}%"><span class="pred-prob-pct">${pred.awayWinProb}%</span></div></div><span class="pred-prob-label right">${m.away}</span></div><div class="pred-prob-legend"><span class="pred-leg-item"><span class="pred-leg-dot home"></span>Menang ${pred.homeWinProb}%</span><span class="pred-leg-item"><span class="pred-leg-dot draw"></span>Seri ${pred.drawProb}%</span><span class="pred-leg-item"><span class="pred-leg-dot away"></span>Menang ${pred.awayWinProb}%</span></div></div>
-  ${pred.keyFactors.length?`<div class="pred-factors" style="background:var(--bg);border-radius:10px;padding:10px 13px;margin-bottom:10px"><div class="pred-factors-title">🔑 Faktor Kunci</div>${pred.keyFactors.map(f=>`<div class="pred-factor-item">• ${f}</div>`).join('')}</div>`:''}
-  ${renderRatingBar('Serangan',hd.attackRating,ad.attackRating)}${renderRatingBar('Pertahanan',hd.defenseRating,ad.defenseRating)}${renderRatingBar('Gelandang',hd.midfieldRating,ad.midfieldRating)}
-  <div style="text-align:center;font-size:10px;color:var(--text3);margin-top:12px">⚠ Prediksi analitis — bukan jaminan hasil</div>`;
+  <div class="pred-prob-section" style="background:var(--bg);border-radius:10px;margin-bottom:10px"><div class="pred-prob-row"><span class="pred-prob-label">${m.home}</span><div class="pred-prob-bar-wrap"><div class="pred-prob-bar home" style="width:${pred.homeWinProb}%"><span class="pred-prob-pct">${pred.homeWinProb}%</span></div><div class="pred-prob-bar draw" style="width:${pred.drawProb}%"><span class="pred-prob-pct">${pred.drawProb}%</span></div><div class="pred-prob-bar away" style="width:${pred.awayWinProb}%"><span class="pred-prob-pct">${pred.awayWinProb}%</span></div></div><span class="pred-prob-label right">${m.away}</span></div><div class="pred-prob-legend"><span class="pred-leg-item"><span class="pred-leg-dot home"></span>Win ${pred.homeWinProb}%</span><span class="pred-leg-item"><span class="pred-leg-dot draw"></span>Draw ${pred.drawProb}%</span><span class="pred-leg-item"><span class="pred-leg-dot away"></span>Win ${pred.awayWinProb}%</span></div></div>
+  ${pred.keyFactors.length?`<div class="pred-factors" style="background:var(--bg);border-radius:10px;padding:10px 13px;margin-bottom:10px"><div class="pred-factors-title">🔑 Key Factors</div>${pred.keyFactors.map(f=>`<div class="pred-factor-item">• ${f}</div>`).join('')}</div>`:''}
+  ${renderRatingBar('Attack',hd.attackRating,ad.attackRating)}${renderRatingBar('Defense',hd.defenseRating,ad.defenseRating)}${renderRatingBar('Midfield',hd.midfieldRating,ad.midfieldRating)}
+  <div style="text-align:center;font-size:10px;color:var(--text3);margin-top:12px">⚠ Analytical prediction — not a guaranteed outcome</div>`;
   if(!isDone)h+=renderBroadcastSection(m.utc);
   document.getElementById('modalBody').innerHTML=h;
 }
