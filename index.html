@@ -615,8 +615,8 @@ let MATCHES = [
   {id:'A2',group:'A',utc:1781229600,home:'South Korea',away:'Czechia',sh:2,sa:1,st:'done',venue:'Estadio Akron, Guadalajara',scorers:"Hwang In-beom 67', Oh Hyeon-gyu 80' / Krejčí 59'",yt:'QWoDfCkh7f8'},
   {id:'A3',group:'A',utc:1781798400,home:'Czechia',away:'South Africa',sh:1,sa:1,st:'done',venue:'Mercedes-Benz Stadium, Atlanta',scorers:"Sadílek 6' / Mokoena 83' pen",yt:''},
   {id:'A4',group:'A',utc:1781830800,home:'Mexico',away:'South Korea',sh:1,sa:0,st:'done',venue:'Estadio Akron, Guadalajara',scorers:"Romo 50' / —",yt:''},
-  {id:'A5',group:'A',utc:1782349200,home:'Czechia',away:'Mexico',sh:null,sa:null,st:'upcoming',venue:'Estadio Azteca, Mexico City',scorers:'',yt:''},
-  {id:'A6',group:'A',utc:1782349200,home:'South Africa',away:'South Korea',sh:null,sa:null,st:'upcoming',venue:'Estadio Akron, Guadalajara',scorers:'',yt:''},
+  {id:'A5',group:'A',utc:1782349200,home:'Czechia',away:'Mexico',sh:0,sa:3,st:'done',venue:'Estadio Azteca, Mexico City',scorers:"— / Chavez 55', Quiñones 61', Fidalgo 90+4'",yt:''},
+  {id:'A6',group:'A',utc:1782349200,home:'South Africa',away:'South Korea',sh:1,sa:0,st:'done',venue:'Estadio Akron, Guadalajara',scorers:"Maseko 63' / —",yt:''},
   {id:'B1',group:'B',utc:1781290800,home:'Canada',away:'Bosnia & Herz',sh:1,sa:1,st:'done',venue:'BMO Field, Toronto',scorers:"Larin 79' / Lukić 21'",yt:'EoHwVJkMbeo'},
   {id:'B2',group:'B',utc:1781377200,home:'Qatar',away:'Switzerland',sh:1,sa:1,st:'done',venue:"Levis Stadium, Santa Clara",scorers:"Khoukhi 90+' / Embolo 17' pen",yt:'8VVaAHmReFY'},
   {id:'B3',group:'B',utc:1781809200,home:'Switzerland',away:'Bosnia & Herz',sh:4,sa:1,st:'done',venue:'SoFi Stadium, Inglewood',scorers:"Manzambi 74', Vargas 84', Manzambi 90', Xhaka 90+7' pen / Mahmic 90+3'",yt:''},
@@ -1035,7 +1035,41 @@ async function fetchScores(){
   setStatus('fetching','');
   let success=false;
 
-  // Source 1: Supabase cache (untuk sinkron admin manual antar device)
+  // Source 1: Supabase `matches` table — SUMBER UTAMA. Semua 104 pertandingan
+  // disimpan di sini dan selalu disinkron dari openfootball. Dibaca duluan
+  // karena cepat (1 request) dan konsisten di semua device.
+  try{
+    const loaded=await loadMatchesFromSupabase();
+    if(loaded){ success=true; lastApiSource='Supabase (matches)'; }
+  }catch(e){console.debug('[SupaMatches]',e.message);}
+
+  // Source 2: openfootball worldcup.json via GitHub raw (gratis, CORS-friendly, no key)
+  // Berfungsi sebagai "updater" — begitu berhasil fetch, langsung sync ULANG
+  // semua 104 pertandingan ke tabel Supabase `matches` supaya selalu terkini.
+  try{
+    const res=await fetch('https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026/worldcup.json',{signal:AbortSignal.timeout(8000)});
+    if(res.ok){
+      const json=await res.json();
+      if(json.matches?.length){
+        mergeOpenFootballData(json.matches);
+        apiOnline=true;fetchAttempts=0;lastApiSource='openfootball (GitHub)';success=true;
+        setStatus('ok','');
+        document.getElementById('apiDot').className='live-dot';
+        // Sync hasil terbaru ke Supabase agar tabel `matches` selalu up to date
+        syncAllMatchesToSupabase().catch(()=>{});
+      }
+    }
+  }catch(e){
+    console.debug('[OpenFootball]',e.message);
+    if(!success){
+      fetchAttempts++;apiOnline=false;
+      setStatus(fetchAttempts>=2?'offline':'error',fetchAttempts>=2?'⚠ Offline — last saved data':'❌ Retrying...');
+      document.getElementById('apiDot').className='live-dot red';
+    }
+  }
+
+  // Source 3: legacy match_updates table — admin manual override (tetap dipertahankan,
+  // berguna kalau admin perlu koreksi cepat tanpa menunggu openfootball update)
   try{
     const rows=await readFromSupabase('match_updates','select=*&order=updated_at.desc');
     if(rows.length){
@@ -1049,30 +1083,10 @@ async function fetchScores(){
         if(r.status)m.st=r.status;
         if(r.scorers)m.scorers=r.scorers;
       }
-      success=true;lastApiSource='Supabase cache';
+      success=true;
     }
   }catch(e){console.debug('[SupaCache]',e.message);}
 
-  // Source 2: openfootball worldcup.json via GitHub raw (gratis, CORS-friendly, no key)
-  try{
-    const res=await fetch('https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026/worldcup.json',{signal:AbortSignal.timeout(8000)});
-    if(res.ok){
-      const json=await res.json();
-      if(json.matches?.length){
-        mergeOpenFootballData(json.matches);
-        apiOnline=true;fetchAttempts=0;lastApiSource='openfootball (GitHub)';success=true;
-        setStatus('ok','');
-        document.getElementById('apiDot').className='live-dot';
-      }
-    }
-  }catch(e){
-    console.debug('[OpenFootball]',e.message);
-    if(!success){
-      fetchAttempts++;apiOnline=false;
-      setStatus(fetchAttempts>=2?'offline':'error',fetchAttempts>=2?'⚠ Offline — last saved data':'❌ Retrying...');
-      document.getElementById('apiDot').className='live-dot red';
-    }
-  }
 
   if(!success){
     fetchAttempts++;apiOnline=false;
@@ -1226,10 +1240,68 @@ async function saveToSupabase(table,data){
   const cfg=getSupaConfig();if(!cfg.ok)return false;
   try{const r=await fetch(cfg.url+'/rest/v1/'+table,{method:'POST',headers:{'Content-Type':'application/json','apikey':cfg.key,'Authorization':'Bearer '+cfg.key,'Prefer':'return=minimal'},body:JSON.stringify(data)});return r.ok;}catch{return false;}
 }
+async function upsertToSupabase(table,data,conflictCol){
+  const cfg=getSupaConfig();if(!cfg.ok)return false;
+  try{
+    const r=await fetch(cfg.url+'/rest/v1/'+table+'?on_conflict='+conflictCol,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':cfg.key,'Authorization':'Bearer '+cfg.key,'Prefer':'resolution=merge-duplicates,return=minimal'},
+      body:JSON.stringify(data)
+    });
+    return r.ok;
+  }catch{return false;}
+}
 async function readFromSupabase(table,filter=''){
   const cfg=getSupaConfig();if(!cfg.ok)return[];
   try{const r=await fetch(cfg.url+'/rest/v1/'+table+'?'+filter,{headers:{'apikey':cfg.key,'Authorization':'Bearer '+cfg.key}});if(r.ok)return await r.json();return[];}catch{return[];}
 }
+
+// ════════════════════════════════════════════════════════════════════════
+// SUPABASE SEBAGAI SUMBER DATA UTAMA — semua 104 pertandingan disimpan
+// di tabel `matches`, dan SELALU diupdate setiap kali openfootball fetch
+// berhasil. Setiap device yang buka app akan baca dari Supabase dulu
+// (load instan, sinkron antar device), lalu openfootball jadi sumber
+// kebenaran untuk mengisi/update Supabase di background.
+// ════════════════════════════════════════════════════════════════════════
+async function loadMatchesFromSupabase(){
+  const cfg=getSupaConfig();if(!cfg.ok)return false;
+  try{
+    const rows=await readFromSupabase('matches','select=*&order=utc_kickoff.asc');
+    if(!rows.length)return false;
+    let applied=0;
+    for(const r of rows){
+      const m=MATCHES.find(x=>x.id===r.match_id);
+      if(!m)continue;
+      m.sh=r.score_home; m.sa=r.score_away; m.st=r.status;
+      if(r.scorers)m.scorers=r.scorers;
+      if(r.venue)m.venue=r.venue;
+      if(r.youtube_id)m.yt=r.youtube_id;
+      applied++;
+    }
+    console.debug('[Supabase] Loaded',applied,'matches from matches table');
+    return applied>0;
+  }catch(e){console.debug('[Supabase load]',e.message);return false;}
+}
+
+async function syncAllMatchesToSupabase(){
+  const cfg=getSupaConfig();if(!cfg.ok)return;
+  // Kirim SEMUA 104 pertandingan (bukan cuma yang live/done) supaya tabel
+  // matches selalu jadi cermin lengkap dari MATCHES array saat ini.
+  const payload=MATCHES.map(m=>({
+    match_id:m.id, group_name:m.group, utc_kickoff:m.utc,
+    home_team:m.home, away_team:m.away,
+    score_home:m.sh, score_away:m.sa, status:m.st,
+    venue:m.venue||null, scorers:m.scorers||null, youtube_id:m.yt||null,
+    updated_at:new Date().toISOString()
+  }));
+  // Kirim per-batch kecil (10 match/request) supaya tidak melebihi limit payload
+  for(let i=0;i<payload.length;i+=10){
+    const batch=payload.slice(i,i+10);
+    await upsertToSupabase('matches',batch,'match_id').catch(()=>{});
+  }
+  console.debug('[Supabase] Synced',payload.length,'matches to matches table');
+}
+
 
 // ── Broadcast helpers ─────────────────────────────────────────
 function getBroadcastInfo(utcTs){
@@ -1701,6 +1773,12 @@ function renderAdmin(){
   const matchOpts=MATCHES.map(m=>`<option value="${m.id}">${m.id}: ${m.home} vs ${m.away} (${m.st})</option>`).join('');
   document.getElementById('adminOut').innerHTML=`
     <div class="admin-panel">
+      <div class="admin-title">☁️ Supabase Sync — Master Data</div>
+      <div style="font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.6">Sinkronkan SEMUA ${MATCHES.length} pertandingan (jadwal, skor, scorer) ke tabel <code>matches</code> di Supabase. Jalankan sekali setelah setup database, atau kapan saja untuk force-push data terkini.</div>
+      <button class="admin-btn primary" onclick="adminSyncAllToSupabase()">☁️ Sync All ${MATCHES.length} Matches to Supabase</button>
+      <div class="admin-feedback" id="adminSyncFeedback"></div>
+    </div>
+    <div class="admin-panel">
       <div class="admin-title">🔧 Admin Panel — Update Skor</div>
       <div class="admin-row"><label class="admin-label">Pilih Pertandingan</label><select class="admin-select" id="adminMatch" onchange="adminMatchChanged()">${matchOpts}</select></div>
       <div class="admin-row"><label class="admin-label">Status</label><select class="admin-select" id="adminStatus"><option value="upcoming">Not Started</option><option value="live">Live</option><option value="done">Finished</option></select></div>
@@ -1730,6 +1808,20 @@ function adminMatchChanged(){
   document.getElementById('adminScorers').value=m.scorers||'';
 }
 
+async function adminSyncAllToSupabase(){
+  const fb=document.getElementById('adminSyncFeedback');
+  fb.textContent='⏳ Syncing...'; fb.style.color='var(--text2)';
+  const cfg=getSupaConfig();
+  if(!cfg.ok){ fb.textContent='❌ Supabase belum dikonfigurasi di config.js'; fb.style.color='var(--red)'; return; }
+  try{
+    await syncAllMatchesToSupabase();
+    fb.textContent=`✅ ${MATCHES.length} matches synced to Supabase!`;
+    fb.style.color='var(--green)';
+  }catch(e){
+    fb.textContent='❌ Sync failed: '+e.message;
+    fb.style.color='var(--red)';
+  }
+}
 async function adminSave(){
   const mid=document.getElementById('adminMatch').value;
   const st=document.getElementById('adminStatus').value;
