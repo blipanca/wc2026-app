@@ -57,7 +57,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 .pwa-banner-close{background:transparent;border:none;color:#fff;font-size:20px;cursor:pointer;padding:0;line-height:1;flex-shrink:0}
 
 /* ── Scroll & Pages ── */
-.scroll-area{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.scroll-area{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;position:relative}
 .page{display:none;padding:12px 14px 20px}
 .page.active{display:block}
 
@@ -421,6 +421,13 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 .stats-src{font-size:11px;color:var(--text3);text-align:center;padding:4px 0 10px;display:flex;align-items:center;justify-content:center;gap:5px}
 .stats-src-dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
 .stats-src-dot.stale{background:var(--amber)}
+
+/* ── Pull-to-refresh ─────────────────────────────────────────────────── */
+.ptr-indicator{position:fixed;top:0;left:0;right:0;display:flex;align-items:center;justify-content:center;height:0;overflow:hidden;z-index:50;transition:height .2s ease;background:transparent}
+.ptr-indicator.active{transition:none}
+.ptr-spinner{width:26px;height:26px;border:2.5px solid var(--border2);border-top-color:var(--red);border-radius:50%;transition:transform .1s linear}
+.ptr-spinner.spinning{animation:ptr-spin .6s linear infinite}
+@keyframes ptr-spin{to{transform:rotate(360deg)}}
 </style>
 <title>FIFA World Cup 2026</title>
 </head>
@@ -453,6 +460,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 
   <!-- PAGES -->
   <main class="scroll-area" id="scrollArea">
+    <div class="ptr-indicator" id="ptrIndicator"><div class="ptr-spinner" id="ptrSpinner"></div></div>
 
     <!-- LIVE -->
     <div id="pg-live" class="page active">
@@ -505,7 +513,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
       <div class="stats-tabs">
         <button class="stab active" onclick="setStTab('scorers',this)">⚽ Top Scorers</button>
         <button class="stab" onclick="setStTab('assists',this)">🎯 Assist</button>
-        <button class="stab" onclick="setStTab('teams',this)">🛡️ Team</button>
+        <button class="stab" onclick="setStTab('teams',this)">🛡️ Tim</button>
       </div>
       <div id="statsOut"></div>
     </div>
@@ -541,36 +549,39 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/></svg>
       Live
     </button>
-    
-    <button class="nav-btn" onclick="navTo('hl',1)">
+    <button class="nav-btn" onclick="navTo('fav',1)">
+      <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      Favorites
+    </button>
+    <button class="nav-btn" onclick="navTo('hl',2)">
       <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       Highlights
     </button>
-    <button class="nav-btn" onclick="navTo('notif',2)">
+    <button class="nav-btn" onclick="navTo('notif',3)">
       <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
       Notif<span class="nav-badge" id="navBadge">0</span>
     </button>
-    <button class="nav-btn" onclick="navTo('jadwal',3)">
+    <button class="nav-btn" onclick="navTo('jadwal',4)">
       <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
       Schedule
     </button>
-    <button class="nav-btn" onclick="navTo('grup',4)">
+    <button class="nav-btn" onclick="navTo('grup',5)">
       <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
       Groups
     </button>
-    <button class="nav-btn" onclick="navTo('stats',5)">
+    <button class="nav-btn" onclick="navTo('stats',6)">
       <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
       Stats
     </button>
-    <button class="nav-btn" onclick="navTo('pred',6)">
+    <button class="nav-btn" onclick="navTo('pred',7)">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
       Predictions
     </button>
-    <button class="nav-btn" onclick="navTo('quiz',7)">
+    <button class="nav-btn" onclick="navTo('quiz',8)">
       <svg viewBox="0 0 24 24"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
       Quiz
     </button>
-    <button class="nav-btn" onclick="navTo('bracket',8)">
+    <button class="nav-btn" onclick="navTo('bracket',9)">
       <svg viewBox="0 0 24 24"><polyline points="22 12 16 12 14 15 10 9 8 12 2 12"/></svg>
       Bracket
     </button>
@@ -623,8 +634,8 @@ let MATCHES = [
   {id:'B2',group:'B',utc:1781377200,home:'Qatar',away:'Switzerland',sh:1,sa:1,st:'done',venue:"Levis Stadium, Santa Clara",scorers:"Khoukhi 90+' / Embolo 17' pen",yt:'8VVaAHmReFY'},
   {id:'B3',group:'B',utc:1781809200,home:'Switzerland',away:'Bosnia & Herz',sh:4,sa:1,st:'done',venue:'SoFi Stadium, Inglewood',scorers:"Manzambi 74', Vargas 84', Manzambi 90', Xhaka 90+7' pen / Mahmic 90+3'",yt:''},
   {id:'B4',group:'B',utc:1781820000,home:'Canada',away:'Qatar',sh:6,sa:0,st:'done',venue:'BC Place, Vancouver',scorers:"Larin 16', David 29', David 45+3', Saliba 64', David 90+2' / —",yt:''},
-  {id:'B5',group:'B',utc:1782327600,home:'Switzerland',away:'Canada',sh:null,sa:null,st:'upcoming',venue:'BC Place, Vancouver',scorers:'',yt:''},
-  {id:'B6',group:'B',utc:1782327600,home:'Bosnia & Herz',away:'Qatar',sh:null,sa:null,st:'upcoming',venue:'Lumen Field, Seattle',scorers:'',yt:''},
+  {id:'B5',group:'B',utc:1782327600,home:'Switzerland',away:'Canada',sh:2,sa:1,st:'done',venue:'BC Place, Vancouver',scorers:"Vargas 46', Manzambi 57' / David 76'",yt:''},
+  {id:'B6',group:'B',utc:1782327600,home:'Bosnia & Herz',away:'Qatar',sh:3,sa:1,st:'done',venue:'Lumen Field, Seattle',scorers:"Alajbegovic 29', Abunada OG 34', Mahmic 80' / Al-Haydos 42'",yt:''},
   {id:'C1',group:'C',utc:1781388000,home:'Brazil',away:'Morocco',sh:1,sa:1,st:'done',venue:'MetLife Stadium, New York/NJ',scorers:"Vinicius Jr 32' / Saibari 21'",yt:'ECnK7UzAjIs'},
   {id:'C2',group:'C',utc:1781398800,home:'Haiti',away:'Scotland',sh:0,sa:1,st:'done',venue:'Gillette Stadium, Boston',scorers:"— / McGinn 28'",yt:'p9oRbh8SCWM'},
   {id:'C3',group:'C',utc:1781906400,home:'Scotland',away:'Morocco',sh:0,sa:1,st:'done',venue:'Gillette Stadium, Boston',scorers:"— / Saibari 2'",yt:''},
@@ -670,29 +681,29 @@ let MATCHES = [
   {id:'J1',group:'J',utc:1781658000,home:'Argentina',away:'Algeria',sh:3,sa:0,st:'done',venue:'Arrowhead Stadium, Kansas City',scorers:"Messi 3 (hat-trick) / —",yt:''},
   {id:'J2',group:'J',utc:1781668800,home:'Austria',away:'Jordan',sh:3,sa:1,st:'done',venue:'Levis Stadium, Santa Clara',scorers:"Schmid 20', Arnautovic 90+' pen, Abu Al Arab OG / Olwan 52'",yt:''},
   {id:'J3',group:'J',utc:1782147600,home:'Argentina',away:'Austria',sh:2,sa:0,st:'done',venue:'AT&T Stadium, Arlington TX',scorers:"Messi 38', Messi 90+5' / —",yt:''},
-  {id:'J4',group:'J',utc:1782183600,home:'Jordan',away:'Algeria',sh:null,sa:null,st:'upcoming',venue:'Levis Stadium, Santa Clara',scorers:'',yt:''},
+  {id:'J4',group:'J',utc:1782183600,home:'Jordan',away:'Algeria',sh:1,sa:2,st:'done',venue:'Levis Stadium, Santa Clara',scorers:"Al-Rashdan 36' / Benbouali 69', Gouiri 82'",yt:''},
   {id:'J5',group:'J',utc:1782612000,home:'Algeria',away:'Austria',sh:null,sa:null,st:'upcoming',venue:'Arrowhead Stadium, Kansas City',scorers:'',yt:''},
   {id:'J6',group:'J',utc:1782612000,home:'Jordan',away:'Argentina',sh:null,sa:null,st:'upcoming',venue:'Levis Stadium, Santa Clara',scorers:'',yt:''},
   {id:'K1',group:'K',utc:1781715600,home:'Portugal',away:'DR Congo',sh:1,sa:1,st:'done',venue:'NRG Stadium, Houston',scorers:"Ronaldo 22' / Banza 87'",yt:''},
   {id:'K2',group:'K',utc:1781748000,home:'Colombia',away:'Uzbekistan',sh:3,sa:1,st:'done',venue:'Estadio Azteca, Mexico City',scorers:"Muñoz 40', Díaz 65', Campaz 90+9' / Fayzullaev 60'",yt:''},
-  {id:'K3',group:'K',utc:1782234000,home:'Portugal',away:'Uzbekistan',sh:null,sa:null,st:'upcoming',venue:'NRG Stadium, Houston',scorers:'',yt:''},
-  {id:'K4',group:'K',utc:1782266400,home:'Colombia',away:'DR Congo',sh:null,sa:null,st:'upcoming',venue:'Estadio Akron, Guadalajara',scorers:'',yt:''},
+  {id:'K3',group:'K',utc:1782234000,home:'Portugal',away:'Uzbekistan',sh:5,sa:0,st:'done',venue:'NRG Stadium, Houston',scorers:"Ronaldo 6', Mendes 17', Ronaldo 39', Nematov OG 60', Leao 87' / —",yt:''},
+  {id:'K4',group:'K',utc:1782266400,home:'Colombia',away:'DR Congo',sh:1,sa:0,st:'done',venue:'Estadio Akron, Guadalajara',scorers:"Munoz 76' / —",yt:''},
   {id:'K5',group:'K',utc:1782603000,home:'Colombia',away:'Portugal',sh:null,sa:null,st:'upcoming',venue:'Hard Rock Stadium, Miami Gardens',scorers:'',yt:''},
   {id:'K6',group:'K',utc:1782603000,home:'DR Congo',away:'Uzbekistan',sh:null,sa:null,st:'upcoming',venue:'Mercedes-Benz Stadium, Atlanta',scorers:'',yt:''},
   {id:'L1',group:'L',utc:1781726400,home:'England',away:'Croatia',sh:4,sa:2,st:'done',venue:'AT&T Stadium, Arlington TX',scorers:"Kane 12' pen & 35', Bellingham 47', Rashford 85' / Baturina 28', Musa 45+5'",yt:''},
   {id:'L2',group:'L',utc:1781737200,home:'Ghana',away:'Panama',sh:1,sa:0,st:'done',venue:'BMO Field, Toronto',scorers:"Yirenkyi 82' / —",yt:''},
-  {id:'L3',group:'L',utc:1782244800,home:'England',away:'Ghana',sh:null,sa:null,st:'upcoming',venue:'Gillette Stadium, Boston',scorers:'',yt:''},
-  {id:'L4',group:'L',utc:1782255600,home:'Panama',away:'Croatia',sh:null,sa:null,st:'upcoming',venue:'BMO Field, Toronto',scorers:'',yt:''},
+  {id:'L3',group:'L',utc:1782244800,home:'England',away:'Ghana',sh:0,sa:0,st:'done',venue:'Gillette Stadium, Boston',scorers:"— / —",yt:''},
+  {id:'L4',group:'L',utc:1782255600,home:'Panama',away:'Croatia',sh:0,sa:1,st:'done',venue:'BMO Field, Toronto',scorers:"— / Budimir 54'",yt:''},
   {id:'L5',group:'L',utc:1782594000,home:'Panama',away:'England',sh:null,sa:null,st:'upcoming',venue:'MetLife Stadium, New York/NJ',scorers:'',yt:''},
   {id:'L6',group:'L',utc:1782594000,home:'Croatia',away:'Ghana',sh:null,sa:null,st:'upcoming',venue:'Lincoln Financial Field, Philadelphia',scorers:'',yt:''},
 ];
 
-const MATCH_STATS_DB = {
-  'A1':{possession:{home:52,away:48},shots:{home:14,away:8},shotsOnTarget:{home:6,away:3},corners:{home:7,away:4},fouls:{home:11,away:14},yellowCards:{home:1,away:2},redCards:{home:1,away:2},xG:{home:1.8,away:0.7},passes:{home:412,away:381},passAccuracy:{home:84,away:79},bigChances:{home:4,away:1},saves:{home:2,away:4},topPlayer:{home:'Julián Quiñones',away:'Percy Tau'},rating:{home:'Quiñones 8.2',away:'Tau 6.4'},attendance:87523,stadium:'Estadio Azteca',notes:'Mexico dominated the second half. Two red cards for South Africa at the 71st minute.'},
-  'A2':{possession:{home:44,away:56},shots:{home:12,away:9},shotsOnTarget:{home:5,away:4},corners:{home:5,away:6},fouls:{home:13,away:10},yellowCards:{home:1,away:1},redCards:{home:0,away:0},xG:{home:1.6,away:1.4},passes:{home:368,away:449},passAccuracy:{home:76,away:84},bigChances:{home:3,away:3},saves:{home:3,away:3},topPlayer:{home:'Hwang In-beom',away:'Tomáš Souček'},rating:{home:'Hwang 8.8',away:'Souček 7.1'},attendance:42384,stadium:'Estadio Akron',notes:'Korea came back from behind. Hwang scored and assisted. Krejci scored the opener for Czechia.'},
-  'B1':{possession:{home:51,away:49},shots:{home:10,away:11},shotsOnTarget:{home:4,away:5},corners:{home:4,away:6},fouls:{home:12,away:13},yellowCards:{home:1,away:2},redCards:{home:0,away:0},xG:{home:1.1,away:1.3},passes:{home:403,away:388},passAccuracy:{home:81,away:78},bigChances:{home:2,away:3},saves:{home:4,away:3},topPlayer:{home:'Cyle Larin',away:'Jovo Lukić'},rating:{home:'Larin 8.1',away:'Lukić 7.6'},attendance:45621,stadium:'BMO Field',notes:"Canada's first-ever World Cup point. Larin was a super sub in the 77th minute."},
-  'D1':{possession:{home:58,away:42},shots:{home:18,away:7},shotsOnTarget:{home:9,away:3},corners:{home:8,away:3},fouls:{home:9,away:14},yellowCards:{home:1,away:3},redCards:{home:0,away:0},xG:{home:3.2,away:0.8},passes:{home:512,away:367},passAccuracy:{home:88,away:76},bigChances:{home:6,away:1},saves:{home:2,away:5},topPlayer:{home:'Folarin Balogun',away:'Julio Enciso'},rating:{home:'Balogun 9.4',away:'Enciso 7.2'},attendance:76500,stadium:'SoFi Stadium',notes:"Balogun hat-trick! USA were utterly dominant. Pulisic with 2 assists."},
-};
+// MATCH_STATS_DB sengaja dikosongkan — fitur kartu kuning/merah, xG, possession,
+// dan player rating per match TIDAK punya sumber data gratis yang valid untuk
+// WC 2026 (sudah dikonfirmasi: openfootball tidak menyediakan data ini, provider
+// yang punya semuanya berbayar mulai $69/bulan). UI akan otomatis tampil
+// "Detailed stats not available yet." untuk semua match — jujur, bukan data fiktif.
+const MATCH_STATS_DB = {};
 
 const BROADCAST = {
   tvFree:['TVRI Nasional','TVRI Sport'],
@@ -839,48 +850,86 @@ const DEFAULT_TEAM = {fifaRank:50,fifaPts:1450,attackRating:68,defenseRating:68,
 function getTeamData(t){ return TEAM_KNOWLEDGE[t]||{...DEFAULT_TEAM,notes:`${t} — predictions berdasarkan FIFA ranking.`}; }
 
 function predictMatch(homeTeam, awayTeam, isNeutral=false){
+  // ════════════════════════════════════════════════════════════════════
+  // Model prediksi BERBASIS DATA REAL saja — tidak ada angka fiktif.
+  // Input yang dipakai (semua terverifikasi/dari hasil pertandingan asli):
+  //   1. FIFA Ranking resmi (per 11 Jun 2026) — fifaRank, fifaPts
+  //   2. Hasil WC 2026 sejauh ini (menang/seri/kalah dari MATCHES, real)
+  //   3. Selisih gol dari pertandingan WC 2026 yang sudah dimainkan (real)
+  // TIDAK dipakai lagi: attackRating/defenseRating/midfieldRating/fitness/
+  // morale/impact — semua itu angka ilustratif yang tidak punya sumber data
+  // valid untuk WC 2026, sehingga dihapus dari model demi kejujuran data.
+  // ════════════════════════════════════════════════════════════════════
   const home=getTeamData(homeTeam), away=getTeamData(awayTeam);
   const maxRank=100;
-  const homeRankScore=Math.max(0,(maxRank-home.fifaRank)/maxRank*100);
-  const awayRankScore=Math.max(0,(maxRank-away.fifaRank)/maxRank*100);
-  const formScore=f=>{const pts=f.reduce((s,r)=>s+(r==='W'?3:r==='D'?1:0),0);return(pts/(f.length*3))*100;};
-  const homeFormScore=formScore(home.wdlForm), awayFormScore=formScore(away.wdlForm);
-  const homeAttackVsAwayDef=(home.attackRating/(away.defenseRating+10))*50;
-  const awayAttackVsHomeDef=(away.attackRating/(home.defenseRating+10))*50;
-  const playerScore=ps=>{if(!ps.length)return 75;return ps.slice(0,3).reduce((s,p)=>s+(p.fitness*.6+p.morale*.4),0)/Math.min(ps.length,3);};
-  const homePlayerScore=playerScore(home.keyPlayers), awayPlayerScore=playerScore(away.keyPlayers);
-  const wcFormScore=team=>{
+  const homeRankScore=Math.max(0,(maxRank-Math.min(home.fifaRank,maxRank))/maxRank*100);
+  const awayRankScore=Math.max(0,(maxRank-Math.min(away.fifaRank,maxRank))/maxRank*100);
+
+  // Bentuk WC 2026 REAL: dihitung langsung dari MATCHES (poin per laga + GD)
+  function wcStatsReal(team){
     const done=MATCHES.filter(m=>m.st==='done'&&(m.home===team||m.away===team));
-    if(!done.length)return 75;
-    const pts=done.reduce((s,m)=>{const isH=m.home===team;const sc=isH?m.sh:m.sa,co=isH?m.sa:m.sh;return s+(sc>co?3:sc===co?1:0);},0);
-    const gd=done.reduce((s,m)=>{const isH=m.home===team;return s+((isH?m.sh-m.sa:m.sa-m.sh)||0);},0);
-    return Math.min(100,50+(pts/done.length)*15+gd*5);
-  };
-  const homeWcForm=wcFormScore(homeTeam), awayWcForm=wcFormScore(awayTeam);
-  const homeAdv=isNeutral?0:8;
-  const w={rank:.20,form:.20,matchup:.20,players:.18,wcForm:.18,home:.04};
-  const homeTotal=homeRankScore*w.rank+homeFormScore*w.form+homeAttackVsAwayDef*w.matchup+homePlayerScore*w.players+homeWcForm*w.wcForm+homeAdv*w.home*100/8;
-  const awayTotal=awayRankScore*w.rank+awayFormScore*w.form+awayAttackVsHomeDef*w.matchup+awayPlayerScore*w.players+awayWcForm*w.wcForm;
+    if(!done.length) return {pl:0, pts:0, gf:0, ga:0, ppg:1.0, gdAvg:0};
+    let pts=0, gf=0, ga=0;
+    for(const m of done){
+      const isH=m.home===team;
+      const sc=isH?m.sh:m.sa, co=isH?m.sa:m.sh;
+      gf+=sc; ga+=co;
+      pts += sc>co?3:sc===co?1:0;
+    }
+    return {pl:done.length, pts, gf, ga, ppg:pts/done.length, gdAvg:(gf-ga)/done.length};
+  }
+  const homeWc=wcStatsReal(homeTeam), awayWc=wcStatsReal(awayTeam);
+
+  // Skor "bentuk" 0-100 berbasis poin-per-laga real WC 2026 (3=menang selalu, 0=kalah selalu)
+  // Tim yang belum main sama sekali diberi skor netral 50 (tidak menguntungkan/merugikan)
+  const homeFormScore = homeWc.pl>0 ? Math.min(100,(homeWc.ppg/3)*100) : 50;
+  const awayFormScore = awayWc.pl>0 ? Math.min(100,(awayWc.ppg/3)*100) : 50;
+
+  // Selisih gol rata-rata per laga (real) — dipakai untuk estimasi proyeksi skor
+  const homeGdAvg = homeWc.pl>0 ? homeWc.gdAvg : 0;
+  const awayGdAvg = awayWc.pl>0 ? awayWc.gdAvg : 0;
+
+  const homeAdv=isNeutral?0:6; // keuntungan tuan rumah lokal — kecil, hanya untuk USA/Canada/Mexico
+
+  // Bobot: FIFA ranking 45%, bentuk WC 2026 real 45%, keuntungan tuan rumah 10%
+  const w={rank:.45,form:.45,home:.10};
+  const homeTotal=homeRankScore*w.rank+homeFormScore*w.form+homeAdv*w.home*10;
+  const awayTotal=awayRankScore*w.rank+awayFormScore*w.form;
   const totalScore=homeTotal+awayTotal;
   const diff=Math.abs(homeTotal-awayTotal);
-  const drawProb=Math.max(5,35-diff*.8);
+  const drawProb=Math.max(8,32-diff*.7);
   const remaining=100-drawProb;
   const homeWinProb=Math.round((homeTotal/totalScore)*remaining);
   const awayWinProb=Math.round(remaining-homeWinProb);
-  const homeXg=parseFloat(((home.avgGoalsScored+(home.attackRating-away.defenseRating)*.02)*.85).toFixed(1));
-  const awayXg=parseFloat(((away.avgGoalsScored+(away.attackRating-home.defenseRating)*.02)*.75).toFixed(1));
+
+  // Proyeksi skor: baseline 1.3 gol (rata-rata gol/tim per laga WC sepanjang sejarah)
+  // disesuaikan dengan GD real tim tersebut di WC 2026 ini, dan kekuatan relatif lawan
+  const baseGoals=1.3;
+  const homeXg=Math.max(0.3,parseFloat((baseGoals+homeGdAvg*.3+(homeRankScore-awayRankScore)*.01).toFixed(1)));
+  const awayXg=Math.max(0.2,parseFloat((baseGoals+awayGdAvg*.3+(awayRankScore-homeRankScore)*.01).toFixed(1)));
+
   const rankDiff=Math.abs(home.fifaRank-away.fifaRank);
   const confidence=rankDiff>30?'High':rankDiff>15?'Medium':'Low';
   const confidencePct=Math.min(85,45+rankDiff*.8);
+
   const keyFactors=[];
-  if(homeTotal>awayTotal+10)keyFactors.push(`${homeTeam} holds a significant FIFA ranking advantage`);
-  if(awayTotal>homeTotal+10)keyFactors.push(`${awayTeam} holds a significant FIFA ranking advantage`);
-  if(homeFormScore>awayFormScore+20)keyFactors.push(`${homeTeam} is in better form`);
-  if(awayFormScore>homeFormScore+20)keyFactors.push(`${awayTeam} is in better form`);
-  home.keyPlayers.filter(p=>p.fitness<80).forEach(p=>keyFactors.push(`⚠ ${homeTeam}: ${p.name} fitness terbatas`));
-  away.keyPlayers.filter(p=>p.fitness<80).forEach(p=>keyFactors.push(`⚠ ${awayTeam}: ${p.name} fitness terbatas`));
-  if(!isNeutral)keyFactors.push(`${homeTeam} bermain sebagai tuan rumah lokal`);
-  return{homeTeam,awayTeam,homeWinProb:Math.max(5,Math.min(90,homeWinProb)),drawProb:Math.max(5,Math.min(50,Math.round(drawProb))),awayWinProb:Math.max(5,Math.min(90,awayWinProb)),predictedScore:`${Math.max(0,Math.round(homeXg))}–${Math.max(0,Math.round(awayXg))}`,homeXg,awayXg,confidence,confidencePct:Math.round(confidencePct),keyFactors:keyFactors.slice(0,4),homeData:home,awayData:away};
+  if(homeRankScore>awayRankScore+15)keyFactors.push(`${homeTeam} holds a significant FIFA ranking advantage`);
+  if(awayRankScore>homeRankScore+15)keyFactors.push(`${awayTeam} holds a significant FIFA ranking advantage`);
+  if(homeWc.pl>0)keyFactors.push(`${homeTeam} WC 2026 form: ${homeWc.pts}pts from ${homeWc.pl} match${homeWc.pl>1?'es':''} (GD ${homeWc.gf-homeWc.ga>=0?'+':''}${homeWc.gf-homeWc.ga})`);
+  if(awayWc.pl>0)keyFactors.push(`${awayTeam} WC 2026 form: ${awayWc.pts}pts from ${awayWc.pl} match${awayWc.pl>1?'es':''} (GD ${awayWc.gf-awayWc.ga>=0?'+':''}${awayWc.gf-awayWc.ga})`);
+  if(!isNeutral)keyFactors.push(`${homeTeam} playing as local host nation`);
+  if(homeWc.pl===0&&awayWc.pl===0)keyFactors.push('No WC 2026 matches played yet — prediction based on FIFA ranking only');
+
+  return{
+    homeTeam,awayTeam,
+    homeWinProb:Math.max(5,Math.min(90,homeWinProb)),
+    drawProb:Math.max(5,Math.min(50,Math.round(drawProb))),
+    awayWinProb:Math.max(5,Math.min(90,awayWinProb)),
+    predictedScore:`${Math.max(0,Math.round(homeXg))}–${Math.max(0,Math.round(awayXg))}`,
+    homeXg,awayXg,confidence,confidencePct:Math.round(confidencePct),
+    keyFactors:keyFactors.slice(0,4),
+    homeData:home,awayData:away
+  };
 }
 
 // ════════════════════════════════════════════════════════════
@@ -910,7 +959,7 @@ let adminUnlockCount = 0;
 let adminUnlocked  = false;
 let countdownInterval = null;
 let theme          = ls('wc_theme') || 'auto';
-const PAGE_IDS     = ['live','hl','notif','jadwal','grup','stats','pred','quiz','admin','bracket'];
+const PAGE_IDS     = ['fav','live','hl','notif','jadwal','grup','stats','pred','quiz','admin','bracket'];
 
 // ── Theme ────────────────────────────────────────────────────
 function applyTheme(){
@@ -1214,6 +1263,27 @@ function renderBroadcastSection(utcTs){
 }
 
 // ── Prediction helpers ────────────────────────────────────────
+
+// Bandingkan poin & GD WC 2026 real antar 2 tim (untuk modal prediksi)
+function renderRealWcCompare(homeTeam, awayTeam){
+  const stat=team=>{
+    const done=MATCHES.filter(m=>m.st==='done'&&(m.home===team||m.away===team));
+    if(!done.length) return {pts:0,gd:0,pl:0};
+    let pts=0,gf=0,ga=0;
+    for(const m of done){
+      const isH=m.home===team;
+      const sc=isH?m.sh:m.sa, co=isH?m.sa:m.sh;
+      gf+=sc; ga+=co;
+      pts+=sc>co?3:sc===co?1:0;
+    }
+    return {pts,gd:gf-ga,pl:done.length};
+  };
+  const h=stat(homeTeam), a=stat(awayTeam);
+  if(h.pl===0&&a.pl===0) return '<div style="font-size:11px;color:var(--text3);text-align:center;padding:8px 0">No WC 2026 matches played yet for either team</div>';
+  const maxPts=Math.max(h.pts,a.pts,1);
+  return renderRatingBar('WC 2026 Points',(h.pts/maxPts)*100,(a.pts/maxPts)*100)
+    + renderRatingBar('Goal Difference',Math.max(0,50+h.gd*5),Math.max(0,50+a.gd*5));
+}
 function renderRatingBar(label,hv,av){
   const total=hv+av||1,hp=Math.round(hv/total*100);
   const hc=hv>av?'var(--green)':hv<av?'var(--red)':'var(--text2)';
@@ -1700,7 +1770,7 @@ function renderPred(){
         <div class="pred-xg-col" style="text-align:right"><div class="pred-xg-val">${pred.awayXg}</div><div class="pred-xg-lbl">xG</div></div>
       </div>
       ${pred.keyFactors.length?`<div class="pred-factors"><div class="pred-factors-title">🔑 Key Factors</div>${pred.keyFactors.map(f=>`<div class="pred-factor-item">• ${f}</div>`).join('')}</div>`:''}
-      <div class="pred-ratings"><div class="pred-ratings-title">📊 Comparison</div>${renderRatingBar('Attack',hd.attackRating,ad.attackRating)}${renderRatingBar('Defense',hd.defenseRating,ad.defenseRating)}${renderRatingBar('Midfield',hd.midfieldRating,ad.midfieldRating)}</div>
+      <div class="pred-ratings"><div class="pred-ratings-title">📊 Comparison (real data)</div>${renderRatingBar('FIFA Rank',Math.max(0,101-hd.fifaRank),Math.max(0,101-ad.fifaRank))}${renderRealWcCompare(m.home,m.away)}</div>
       <div class="pred-players"><div class="pred-half"><div class="pred-players-title">${activePredMatch.home}</div>${hd.keyPlayers.slice(0,3).map(p=>renderPlayerChip(p)).join('')}${hd.notes?`<div class="pred-team-note">${hd.notes}</div>`:''}</div><div class="pred-half"><div class="pred-players-title">${activePredMatch.away}</div>${ad.keyPlayers.slice(0,3).map(p=>renderPlayerChip(p)).join('')}${ad.notes?`<div class="pred-team-note">${ad.notes}</div>`:''}</div></div>
       <div style="font-size:10px;color:var(--text3);text-align:center;padding:10px 14px">⚠ Analytical prediction — not a guaranteed outcome. Data: FIFA Jun 2026 + WC 2026 matchday.</div>
     </div>`;
@@ -2147,8 +2217,8 @@ function renderModalPred(m){
   h+=`<div class="pred-header" style="margin-bottom:12px"><div class="pred-team-col"><div class="pred-flag">${flag(m.home)}</div><div class="pred-name">${m.home}</div><div class="pred-rank">FIFA #${hd.fifaRank}</div></div><div class="pred-vs-col"><div class="pred-score-pred">${pred.predictedScore}</div><div class="pred-vs-label">Score Prediction</div></div><div class="pred-team-col"><div class="pred-flag">${flag(m.away)}</div><div class="pred-name">${m.away}</div><div class="pred-rank">FIFA #${ad.fifaRank}</div></div></div>
   <div class="pred-prob-section" style="background:var(--bg);border-radius:10px;margin-bottom:10px"><div class="pred-prob-row"><span class="pred-prob-label">${m.home}</span><div class="pred-prob-bar-wrap"><div class="pred-prob-bar home" style="width:${pred.homeWinProb}%"><span class="pred-prob-pct">${pred.homeWinProb}%</span></div><div class="pred-prob-bar draw" style="width:${pred.drawProb}%"><span class="pred-prob-pct">${pred.drawProb}%</span></div><div class="pred-prob-bar away" style="width:${pred.awayWinProb}%"><span class="pred-prob-pct">${pred.awayWinProb}%</span></div></div><span class="pred-prob-label right">${m.away}</span></div><div class="pred-prob-legend"><span class="pred-leg-item"><span class="pred-leg-dot home"></span>Win ${pred.homeWinProb}%</span><span class="pred-leg-item"><span class="pred-leg-dot draw"></span>Draw ${pred.drawProb}%</span><span class="pred-leg-item"><span class="pred-leg-dot away"></span>Win ${pred.awayWinProb}%</span></div></div>
   ${pred.keyFactors.length?`<div class="pred-factors" style="background:var(--bg);border-radius:10px;padding:10px 13px;margin-bottom:10px"><div class="pred-factors-title">🔑 Key Factors</div>${pred.keyFactors.map(f=>`<div class="pred-factor-item">• ${f}</div>`).join('')}</div>`:''}
-  ${renderRatingBar('Attack',hd.attackRating,ad.attackRating)}${renderRatingBar('Defense',hd.defenseRating,ad.defenseRating)}${renderRatingBar('Midfield',hd.midfieldRating,ad.midfieldRating)}
-  <div style="text-align:center;font-size:10px;color:var(--text3);margin-top:12px">⚠ Analytical prediction — not a guaranteed outcome</div>`;
+  ${renderRatingBar('FIFA Rank',Math.max(0,101-hd.fifaRank),Math.max(0,101-ad.fifaRank))}${renderRealWcCompare(m.home,m.away)}
+  <div style="text-align:center;font-size:10px;color:var(--text3);margin-top:12px">⚠ Analytical prediction based on real FIFA ranking + WC 2026 results — not a guaranteed outcome</div>`;
   if(!isDone)h+=renderBroadcastSection(m.utc);
   document.getElementById('modalBody').innerHTML=h;
 }
@@ -2684,6 +2754,75 @@ document.addEventListener('DOMContentLoaded',()=>{
     setTimeout(updatePageDots, 100);
   });
 })();
+
+// ════════════════════════════════════════════════════════════════════════
+// PULL-TO-REFRESH — geser dari atas ke bawah untuk refresh data,
+// seperti mekanisme standar di kebanyakan app (Twitter, Instagram, dst).
+// Hanya aktif ketika posisi scroll sudah di paling atas halaman.
+// ════════════════════════════════════════════════════════════════════════
+(function(){
+  const scr = document.getElementById('scrollArea');
+  const indicator = document.getElementById('ptrIndicator');
+  const spinner = document.getElementById('ptrSpinner');
+  if(!scr || !indicator) return;
+
+  const PTR_THRESHOLD = 70; // px tarikan minimum untuk memicu refresh
+  const PTR_MAX = 90;       // px maksimum indikator terlihat
+  let ptrStartY = 0;
+  let ptrCurrentY = 0;
+  let ptrActive = false;
+  let ptrRefreshing = false;
+
+  scr.addEventListener('touchstart', e => {
+    if(scr.scrollTop <= 0 && !ptrRefreshing){
+      ptrStartY = e.touches[0].clientY;
+      ptrActive = true;
+      indicator.classList.add('active');
+    }
+  }, {passive: true});
+
+  scr.addEventListener('touchmove', e => {
+    if(!ptrActive || ptrRefreshing) return;
+    ptrCurrentY = e.touches[0].clientY;
+    const dy = ptrCurrentY - ptrStartY;
+    if(dy > 0 && scr.scrollTop <= 0){
+      const height = Math.min(dy * 0.5, PTR_MAX);
+      indicator.style.height = height + 'px';
+      const rotation = Math.min((dy / PTR_THRESHOLD) * 360, 360);
+      spinner.style.transform = `rotate(${rotation}deg)`;
+    } else {
+      ptrActive = false;
+      indicator.classList.remove('active');
+      indicator.style.height = '0px';
+    }
+  }, {passive: true});
+
+  scr.addEventListener('touchend', () => {
+    if(!ptrActive || ptrRefreshing) return;
+    const dy = ptrCurrentY - ptrStartY;
+    indicator.classList.remove('active');
+
+    if(dy > PTR_THRESHOLD){
+      // Trigger refresh
+      ptrRefreshing = true;
+      indicator.style.height = '50px';
+      spinner.classList.add('spinning');
+      fetchScores().finally(() => {
+        setTimeout(() => {
+          indicator.style.height = '0px';
+          spinner.classList.remove('spinning');
+          ptrRefreshing = false;
+        }, 400);
+      });
+    } else {
+      indicator.style.height = '0px';
+    }
+    ptrActive = false;
+    ptrStartY = 0;
+    ptrCurrentY = 0;
+  }, {passive: true});
+})();
+
 
 </script>
 </body>
