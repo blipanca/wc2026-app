@@ -443,7 +443,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
       </div>
       <div class="topbar-actions">
         <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" aria-label="Toggle tema">🌓</button>
-        <div class="live-pill" onclick="navTo('notif',3)">
+        <div class="live-pill" onclick="navTo('notif',2)">
           <span class="live-dot grey" id="apiDot"></span>
           <span class="live-label">LIVE</span>
           <span class="nav-badge" id="topBadge" style="position:static;transform:none;margin-left:2px;display:none"></span>
@@ -524,11 +524,6 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
       <div id="predOut"></div>
     </div>
 
-    <!-- QUIZ -->
-    <div id="pg-quiz" class="page">
-      <div id="quizOut"></div>
-    </div>
-
     <!-- ADMIN (hidden) -->
     <div id="pg-admin" class="page">
       <div class="info-box">🔧 Admin panel untuk update data matches. Tap judul app 7× untuk akses.</div>
@@ -549,39 +544,31 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/></svg>
       Live
     </button>
-    <button class="nav-btn" onclick="navTo('fav',1)">
-      <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-      Favorites
-    </button>
-    <button class="nav-btn" onclick="navTo('hl',2)">
+    <button class="nav-btn" onclick="navTo('hl',1)">
       <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
       Highlights
     </button>
-    <button class="nav-btn" onclick="navTo('notif',3)">
+    <button class="nav-btn" onclick="navTo('notif',2)">
       <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
       Notif<span class="nav-badge" id="navBadge">0</span>
     </button>
-    <button class="nav-btn" onclick="navTo('jadwal',4)">
+    <button class="nav-btn" onclick="navTo('jadwal',3)">
       <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
       Schedule
     </button>
-    <button class="nav-btn" onclick="navTo('grup',5)">
+    <button class="nav-btn" onclick="navTo('grup',4)">
       <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
       Groups
     </button>
-    <button class="nav-btn" onclick="navTo('stats',6)">
+    <button class="nav-btn" onclick="navTo('stats',5)">
       <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
       Stats
     </button>
-    <button class="nav-btn" onclick="navTo('pred',7)">
+    <button class="nav-btn" onclick="navTo('pred',6)">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
       Predictions
     </button>
-    <button class="nav-btn" onclick="navTo('quiz',8)">
-      <svg viewBox="0 0 24 24"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
-      Quiz
-    </button>
-    <button class="nav-btn" onclick="navTo('bracket',9)">
+    <button class="nav-btn" onclick="navTo('bracket',7)">
       <svg viewBox="0 0 24 24"><polyline points="22 12 16 12 14 15 10 9 8 12 2 12"/></svg>
       Bracket
     </button>
@@ -640,8 +627,8 @@ let MATCHES = [
   {id:'C2',group:'C',utc:1781398800,home:'Haiti',away:'Scotland',sh:0,sa:1,st:'done',venue:'Gillette Stadium, Boston',scorers:"— / McGinn 28'",yt:'p9oRbh8SCWM'},
   {id:'C3',group:'C',utc:1781906400,home:'Scotland',away:'Morocco',sh:0,sa:1,st:'done',venue:'Gillette Stadium, Boston',scorers:"— / Saibari 2'",yt:''},
   {id:'C4',group:'C',utc:1781915400,home:'Brazil',away:'Haiti',sh:3,sa:0,st:'done',venue:'Lincoln Financial Field, Philadelphia',scorers:"Cunha 23', Cunha 36', Vinícius Júnior 45+3' / —",yt:''},
-  {id:'C5',group:'C',utc:1782338400,home:'Scotland',away:'Brazil',sh:null,sa:null,st:'upcoming',venue:'Hard Rock Stadium, Miami Gardens',scorers:'',yt:''},
-  {id:'C6',group:'C',utc:1782338400,home:'Morocco',away:'Haiti',sh:null,sa:null,st:'upcoming',venue:'Mercedes-Benz Stadium, Atlanta',scorers:'',yt:''},
+  {id:'C5',group:'C',utc:1782338400,home:'Scotland',away:'Brazil',sh:0,sa:3,st:'done',venue:'Hard Rock Stadium, Miami Gardens',scorers:"— / Vinicius Jr 7', Vinicius Jr 45+3', Cunha 60'",yt:''},
+  {id:'C6',group:'C',utc:1782338400,home:'Morocco',away:'Haiti',sh:4,sa:2,st:'done',venue:'Mercedes-Benz Stadium, Atlanta',scorers:"Hakimi 39', Saibari 45+1', Rahimi 78', Yassine 89' / Bounou OG 10', Isidor 43'",yt:''},
   {id:'D1',group:'D',utc:1781312400,home:'USA',away:'Paraguay',sh:4,sa:1,st:'done',venue:'SoFi Stadium, Inglewood',scorers:"Bobadilla OG 7', Balogun 31', 45+5' (pen), Reyna 90+' / Enciso 73'",yt:'V93gJkMHH3w'},
   {id:'D2',group:'D',utc:1781409600,home:'Australia',away:'Türkiye',sh:2,sa:0,st:'done',venue:'BC Place, Vancouver',scorers:"Irankunda 27', Metcalfe 75' / —",yt:'lb6fhd1Tynk'},
   {id:'D3',group:'D',utc:1781895600,home:'USA',away:'Australia',sh:2,sa:0,st:'done',venue:'Lumen Field, Seattle',scorers:"Burgess OG 11', Freeman 43' / —",yt:''},
@@ -959,7 +946,7 @@ let adminUnlockCount = 0;
 let adminUnlocked  = false;
 let countdownInterval = null;
 let theme          = ls('wc_theme') || 'auto';
-const PAGE_IDS     = ['fav','live','hl','notif','jadwal','grup','stats','pred','quiz','admin','bracket'];
+const PAGE_IDS     = ['live','hl','notif','jadwal','grup','stats','pred','admin','bracket'];
 
 // ── Theme ────────────────────────────────────────────────────
 function applyTheme(){
@@ -1371,83 +1358,6 @@ function renderLive(){
 }
 
 // ── HIGHLIGHTS ────────────────────────────────────────────────
-function renderFav(){
-  const MAX_FAV = 3;
-  const allTeams = [];
-  for(const [grpKey, gd] of Object.entries(GROUPS))
-    for(const t of gd.t)
-      allTeams.push({team:t, fl:gd.f[t]||'🏳'});
-
-  const overLimit = favoriteTeams.size >= MAX_FAV;
-  const favNotifOn = ls('wc_fav_notif') !== false;
-
-  // Build team grid
-  let grid = '';
-  for(const {team, fl} of allTeams){
-    const sel = favoriteTeams.has(team);
-    const disabled = (!sel && overLimit) ? 'disabled style="opacity:.4;cursor:default"' : '';
-    const borderColor = sel ? 'var(--amber)' : 'var(--border)';
-    const bgColor     = sel ? 'rgba(251,191,36,.1)' : 'transparent';
-    const star        = sel ? '<span style="position:absolute;top:4px;right:4px;font-size:11px">⭐</span>' : '';
-    grid += '<button onclick="toggleFavTeamPage(\''+team+'\')" '+disabled+' '
-          + 'style="display:flex;flex-direction:column;align-items:center;gap:4px;'
-          + 'padding:10px 4px;border:1.5px solid '+borderColor+';border-radius:12px;'
-          + 'cursor:pointer;font-family:inherit;background:'+bgColor+';position:relative">'
-          + '<span style="font-size:22px;line-height:1">'+fl+'</span>'
-          + '<span style="font-size:10px;font-weight:600;color:var(--text2);text-align:center;'
-          + 'max-width:62px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+team+'</span>'
-          + star
-          + '</button>';
-  }
-
-  // Build fav match list
-  let matchList = '';
-  if(favoriteTeams.size){
-    const favMs  = MATCHES.filter(m => isFavMatch(m));
-    const live   = favMs.filter(m => m.st === 'live');
-    const coming = favMs.filter(m => m.st === 'upcoming').sort((a,b)=>a.utc-b.utc).slice(0,6);
-    const done   = favMs.filter(m => m.st === 'done').sort((a,b)=>b.utc-a.utc).slice(0,6);
-    if(live.length){
-      matchList += '<div class="sec-lbl">🔴 Live Now</div>';
-      live.forEach(m => { matchList += matchCard(m); });
-    }
-    if(coming.length){
-      matchList += '<div class="sec-lbl">⏰ Favorite Team Fixtures</div>';
-      coming.forEach(m => { matchList += matchCard(m); });
-    }
-    if(done.length){
-      matchList += '<div class="sec-lbl">✅ Latest Results</div>';
-      done.forEach(m => { matchList += matchCard(m, {showHl:true}); });
-    }
-    if(!live.length && !coming.length && !done.length){
-      matchList = "<div style=\"text-align:center;padding:20px;color:var(--text3);font-size:13px\">Your favorite teams haven't played yet.</div>";
-    }
-  } else {
-    matchList = '<div style="text-align:center;padding:20px;color:var(--text3);font-size:13px">Select a team above to see its schedule and notifications.</div>';
-  }
-
-  document.getElementById('favOut').innerHTML =
-    '<div class="sec-lbl">⭐ Choose Favorite Teams (max. ' + MAX_FAV + ')</div>'
-    + (overLimit ? '<div class="info-box" style="color:var(--amber)">Maks '+MAX_FAV+' tim. Tap a selected team to remove it.</div>' : '')
-    + '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:14px">' + grid + '</div>'
-    + '<div style="display:flex;align-items:center;justify-content:space-between;'
-    + 'padding:10px 13px;background:var(--bg);border-radius:10px;margin-bottom:14px">'
-    + '<div><div style="font-size:13px;font-weight:600">🔔 Favorite teams only notifications</div>'
-    + '<div style="font-size:11px;color:var(--text2);margin-top:2px">Turn off notifications for other matches</div></div>'
-    + '<div class="toggle-sw' + (favNotifOn ? ' on' : '') + '" '
-    + 'onclick="ls(\'wc_fav_notif\',!(ls(\'wc_fav_notif\')!==false));renderFav()" role="switch">'
-    + '<div class="toggle-knob"></div></div></div>'
-    + matchList;
-}
-
-function toggleFavTeamPage(team){
-  const MAX_FAV=3;
-  if(favoriteTeams.has(team))favoriteTeams.delete(team);
-  else{if(favoriteTeams.size>=MAX_FAV)return;favoriteTeams.add(team);}
-  ls('wc_favs',[...favoriteTeams]);
-  renderFav();
-  if(currentPage==='live')renderLive();
-}
 
 function renderHl(){
   // Tampilkan SEMUA matches selesai, dengan atau tanpa YouTube ID
@@ -1780,172 +1690,6 @@ function renderPred(){
 function selectPredMatch(id){activePredMatch=MATCHES.find(m=>m.id===id)||null;renderPred();}
 
 // ── QUIZ / COMMUNITY PREDICTIONS ─────────────────────────────
-async function renderQuiz(){
-  const out = document.getElementById('quizOut');
-  const myPreds = ls('wc_my_preds') || {};
-  const mySid = ss('wc_sid') || 'anon';
-
-  // Upcoming matches to predict
-  const upcoming = MATCHES.filter(m => m.st === 'upcoming')
-    .sort((a,b) => a.utc - b.utc).slice(0, 8);
-
-  // Done matches — check predictions
-  const done = MATCHES.filter(m => m.st === 'done')
-    .sort((a,b) => b.utc - a.utc).slice(0, 6);
-
-  let h = `<div class="info-box">🎯 Predict the score before kickoff. Exact score = <strong>3 points</strong>, correct winner = <strong>1 point</strong>.</div>`;
-
-  // ── Upcoming: submit prediction ───────────────────────────────────────
-  if(upcoming.length){
-    h += `<div class="sec-lbl">📝 Submit Your Prediction</div>`;
-    for(const m of upcoming){
-      const tf = fmtTime(m.utc);
-      const pred = myPreds[m.id];
-      if(pred){
-        // Already submitted
-        h += `<div class="quiz-match-card"><div class="quiz-match-hdr">
-          <span class="quiz-match-teams">${flag(m.home)} ${m.home} vs ${m.away} ${flag(m.away)}</span>
-          <span class="quiz-match-info">Group ${m.group}</span>
-        </div>
-        <div class="quiz-submitted">
-          <div class="quiz-pred-badge">✅ Your prediction: ${pred.sh} – ${pred.sa}</div>
-          <div style="font-size:11px;color:var(--text3);margin-bottom:8px">${tf.date} · ${tf.time} ${tf.label}</div>
-          <button class="quiz-change-btn" onclick="deleteQuizPred('${m.id}')">✏ Edit prediction</button>
-        </div></div>`;
-      } else {
-        // Input form
-        h += `<div class="quiz-match-card"><div class="quiz-match-hdr">
-          <span class="quiz-match-teams">${flag(m.home)} ${m.home} vs ${m.away} ${flag(m.away)}</span>
-          <span class="quiz-match-info">Group ${m.group}</span>
-        </div>
-        <div style="font-size:11px;color:var(--text3);text-align:center;padding:4px 0 8px">${tf.date} · ${tf.time} ${tf.label}</div>
-        <div class="quiz-score-row">
-          <div class="quiz-score-team">
-            <span>${flag(m.home)}</span>
-            <span>${m.home.split(' ')[0]}</span>
-            <input class="quiz-score-input" type="number" id="qh_${m.id}" min="0" max="20" value="1" inputmode="numeric">
-          </div>
-          <span class="quiz-score-sep">:</span>
-          <div class="quiz-score-team">
-            <span>${flag(m.away)}</span>
-            <span>${m.away.split(' ')[0]}</span>
-            <input class="quiz-score-input" type="number" id="qa_${m.id}" min="0" max="20" value="0" inputmode="numeric">
-          </div>
-        </div>
-        <button class="quiz-submit-btn" onclick="submitQuizPred('${m.id}','${m.home}','${m.away}')">Submit Prediction →</button>
-        </div>`;
-      }
-    }
-  }
-
-  // ── Past predictions with results ────────────────────────────────────
-  const myDonePreds = done.filter(m => myPreds[m.id]);
-  if(myDonePreds.length){
-    h += `<div class="sec-lbl">📊 Your Prediction Results</div>`;
-    let totalPts = 0;
-    for(const m of myDonePreds){
-      const pred = myPreds[m.id];
-      const exactMatch = pred.sh === m.sh && pred.sa === m.sa;
-      const realWin = m.sh > m.sa ? 'H' : m.sh < m.sa ? 'A' : 'D';
-      const predWin = pred.sh > pred.sa ? 'H' : pred.sh < pred.sa ? 'A' : 'D';
-      const winnerMatch = realWin === predWin;
-      const pts = exactMatch ? 3 : winnerMatch ? 1 : 0;
-      totalPts += pts;
-      const ptsColor = pts===3?'var(--green)':pts===1?'var(--amber)':'var(--text3)';
-      const ptsLabel = pts===3?'🎯 Exact score! +3':pts===1?'✓ Correct winner +1':'✗ Missed';
-      h += `<div style="border:0.5px solid var(--border);border-radius:12px;padding:11px 13px;margin-bottom:8px;background:var(--bg)">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
-          <span style="font-size:13px;font-weight:600">${flag(m.home)} ${m.home} vs ${m.away} ${flag(m.away)}</span>
-          <span style="font-size:13px;font-weight:700;color:${ptsColor}">${ptsLabel}</span>
-        </div>
-        <div style="display:flex;gap:14px;font-size:12px;color:var(--text2)">
-          <span>Your prediction: <strong>${pred.sh}–${pred.sa}</strong></span>
-          <span>Result: <strong>${m.sh}–${m.sa}</strong></span>
-        </div>
-      </div>`;
-    }
-    h += `<div style="text-align:center;padding:10px;background:rgba(22,163,74,.08);border-radius:10px;font-size:14px;font-weight:700;color:var(--green);margin-bottom:14px">
-      Total Points: ${totalPts} pts from ${myDonePreds.length} predictions
-    </div>`;
-  }
-
-  // ── Leaderboard ────────────────────────────────────────────────────────
-  h += `<div class="sec-lbl">🏆 Leaderboard</div>`;
-  const lbData = await loadLeaderboard();
-  if(lbData.length){
-    const top = lbData.slice(0, 10);
-    h += `<table class="lb-table"><thead><tr><th class="lb-pos">#</th><th>Player</th><th>Prediction</th><th class="lb-pts">Poin</th></tr></thead><tbody>`;
-    top.forEach((row, i) => {
-      const isMe = row.sid === mySid;
-      const medal = i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1;
-      h += `<tr${isMe?' class="lb-you"':''}>
-        <td class="lb-pos">${medal}</td>
-        <td style="font-weight:${isMe?700:400}">${isMe?'🙋 Me':'Pemain '+(i+1)}</td>
-        <td style="color:var(--text3)">${row.total}</td>
-        <td class="lb-pts">${row.points}</td>
-      </tr>`;
-    });
-    h += `</tbody></table>`;
-    if(!lbData.find(r=>r.sid===mySid)&&myDonePreds.length){
-      h += `<div style="font-size:11px;color:var(--text3);text-align:center;margin-top:8px">You haven't appeared on the leaderboard yet — predictions lebih banyak untuk naik peringkat!</div>`;
-    }
-  } else {
-    h += `<div style="text-align:center;padding:20px;color:var(--text3);font-size:13px">The leaderboard will appear once predictions are confirmed.</div>`;
-  }
-
-  out.innerHTML = h;
-}
-function submitQuizPred(matchId,home,away){
-  const shEl = document.getElementById('qh_'+matchId);
-  const saEl = document.getElementById('qa_'+matchId);
-  const sh = parseInt(shEl?.value ?? 0);
-  const sa = parseInt(saEl?.value ?? 0);
-  if(isNaN(sh)||isNaN(sa)||sh<0||sa<0) return;
-  const myPreds = ls('wc_my_preds') || {};
-  myPreds[matchId] = {sh, sa, submittedAt: Date.now()};
-  ls('wc_my_preds', myPreds);
-  // Save to Supabase
-  const sid = ss('wc_sid') || 'anon';
-  saveToSupabase('predictions', {
-    match_id: matchId, score_home: sh, score_away: sa,
-    session_id: sid, submitted_at: new Date().toISOString()
-  }).catch(()=>{});
-  renderQuiz();
-}
-function deleteQuizPred(matchId){const myPreds=ls('wc_my_preds')||{};delete myPreds[matchId];ls('wc_my_preds',myPreds);renderQuiz();}
-
-function calcMyAccuracy(preds){
-  let exact=0,winner=0,total=0,points=0;
-  for(const[id,p]of Object.entries(preds)){
-    const m=MATCHES.find(x=>x.id===id);
-    if(!m||m.st!=='done')continue;
-    total++;
-    if(p.home===m.sh&&p.away===m.sa){exact++;points+=3;winner++;}
-    else{const realW=m.sh>m.sa?'H':m.sh<m.sa?'A':'D';const predW=p.home>p.away?'H':p.home<p.away?'A':'D';if(realW===predW){winner++;points+=1;}}
-  }
-  return{exact,winner,total,points};
-}
-
-async function loadLeaderboard(){
-  const cfg=getSupaConfig();
-  if(!cfg.ok)return ls('wc_lb')||[];
-  try{
-    const rows=await readFromSupabase('predictions','select=session_id,match_id,score_home,score_away&order=submitted_at.asc');
-    const sessMap={};
-    for(const r of rows){
-      const m=MATCHES.find(x=>x.id===r.match_id);
-      if(!m||m.st!=='done') continue;
-      if(!sessMap[r.session_id]) sessMap[r.session_id]={sid:r.session_id,points:0,total:0};
-      sessMap[r.session_id].total++;
-      const exact = r.score_home===m.sh && r.score_away===m.sa;
-      const realW = m.sh>m.sa?'H':m.sh<m.sa?'A':'D';
-      const predW = r.score_home>r.score_away?'H':r.score_home<r.score_away?'A':'D';
-      if(exact) sessMap[r.session_id].points+=3;
-      else if(realW===predW) sessMap[r.session_id].points+=1;
-    }
-    return Object.values(sessMap).sort((a,b)=>b.points-a.points);
-  }catch{return ls('wc_lb')||[];}
-}
 
 // ── ADMIN PANEL ───────────────────────────────────────────────
 function checkAdminUnlock(){
@@ -2279,7 +2023,6 @@ function navTo(id,btnIdx){
 }
 function renderPage(id){
   switch(id){
-    case'fav':     renderFav();     break;
     case'live':    renderLive();    break;
     case'hl':      renderHl();      break;
     case'notif':   renderNotif();   break;
@@ -2287,7 +2030,6 @@ function renderPage(id){
     case'grup':    renderGrups();   break;
     case'stats':   renderStats();   break;
     case'pred':    renderPred();    break;
-    case'quiz':    renderQuiz();    break;
     case'admin':   renderAdmin();   break;
     case'bracket': renderBracket(); break;
   }
@@ -2683,7 +2425,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 // ════════════════════════════════════════════════════════════════════════
 (function(){
   const PAGES = ['live','hl','notif','jadwal','grup','stats','pred','quiz','admin','bracket'];
-  const VISIBLE_PAGES = ['live','hl','notif','jadwal','grup','stats','pred','quiz','bracket'];
+  const VISIBLE_PAGES = ['live','hl','notif','jadwal','grup','stats','pred','bracket'];
 
   let touchStartX = 0;
   let touchStartY = 0;
