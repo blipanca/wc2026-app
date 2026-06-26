@@ -1752,7 +1752,7 @@ function renderPred(){
         <div class="pred-xg-col" style="text-align:right"><div class="pred-xg-val">${pred.awayXg}</div><div class="pred-xg-lbl">xG</div></div>
       </div>
       ${pred.keyFactors.length?`<div class="pred-factors"><div class="pred-factors-title">🔑 Key Factors</div>${pred.keyFactors.map(f=>`<div class="pred-factor-item">• ${f}</div>`).join('')}</div>`:''}
-      <div class="pred-ratings"><div class="pred-ratings-title">📊 Comparison (real data)</div>${renderRatingBar('FIFA Rank',Math.max(0,101-hd.fifaRank),Math.max(0,101-ad.fifaRank))}${renderRealWcCompare(m.home,m.away)}</div>
+      <div class="pred-ratings"><div class="pred-ratings-title">📊 Comparison (real data)</div>${renderRatingBar('FIFA Rank',Math.max(0,101-hd.fifaRank),Math.max(0,101-ad.fifaRank))}${renderRealWcCompare(activePredMatch.home,activePredMatch.away)}</div>
       <div class="pred-players"><div class="pred-half"><div class="pred-players-title">${activePredMatch.home}</div>${hd.keyPlayers.slice(0,3).map(p=>renderPlayerChip(p)).join('')}${hd.notes?`<div class="pred-team-note">${hd.notes}</div>`:''}</div><div class="pred-half"><div class="pred-players-title">${activePredMatch.away}</div>${ad.keyPlayers.slice(0,3).map(p=>renderPlayerChip(p)).join('')}${ad.notes?`<div class="pred-team-note">${ad.notes}</div>`:''}</div></div>
       <div style="font-size:10px;color:var(--text3);text-align:center;padding:10px 14px">⚠ Analytical prediction — not a guaranteed outcome. Data: FIFA Jun 2026 + WC 2026 matchday.</div>
     </div>`;
