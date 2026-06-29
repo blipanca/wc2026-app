@@ -465,6 +465,25 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
   .brkv-title{font-size:9px}
   .brkv-connector{width:8px}
 }
+
+/* ── Bracket lengkap (R32 sampai Final) ──────────────────────────────── */
+.brkv-grid-full{display:flex;align-items:center;gap:6px;min-width:1400px;padding:8px 4px}
+.brkv-side.col{display:flex;flex-direction:column;gap:6px;justify-content:center}
+.brkv-col-label{font-size:9px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;text-align:center;margin-bottom:2px}
+.brkv-side.col .brkv-match{width:148px;margin:2px 0}
+.brkv-side.col .brkv-team{padding:5px 7px;font-size:10.5px}
+.brkv-side.col .bv-name{font-size:10px}
+.brkv-center-final{display:flex;flex-direction:column;align-items:center;gap:6px;padding:0 10px;flex-shrink:0}
+.brkv-center-final .brkv-match{width:160px}
+.brkv-3rd-label{font-size:9px;font-weight:700;color:var(--text3);margin-top:10px;text-align:center}
+@media (max-width:480px){
+  .brkv-grid-full{min-width:1100px;gap:3px}
+  .brkv-side.col .brkv-match{width:108px}
+  .brkv-side.col .brkv-team{padding:4px 5px;font-size:9px}
+  .brkv-side.col .bv-name{font-size:8.5px}
+  .brkv-center-final .brkv-match{width:120px}
+  .brkv-trophy{font-size:28px}
+}
 </style>
 <title>FIFA World Cup 2026</title>
 </head>
@@ -736,6 +755,22 @@ let MATCHES = [
   {id:'R32-14',group:'R32',utc:1783101600,home:'Australia',away:'Egypt',sh:null,sa:null,st:'upcoming',venue:'AT&T Stadium, Arlington',scorers:'',yt:''},
   {id:'R32-15',group:'R32',utc:1783116000,home:'Argentina',away:'Cape Verde',sh:null,sa:null,st:'upcoming',venue:'Hard Rock Stadium, Miami Gardens',scorers:'',yt:''},
   {id:'R32-16',group:'R32',utc:1783128600,home:'Colombia',away:'Ghana',sh:null,sa:null,st:'upcoming',venue:'Arrowhead Stadium, Kansas City',scorers:'',yt:''},
+  {id:'R16-1',group:'KO',utc:1783180800,home:'W74',away:'W77',sh:null,sa:null,st:'upcoming',venue:'Estadio Akron, Guadalajara',scorers:'',yt:''},
+  {id:'R16-2',group:'KO',utc:1783195200,home:'W73',away:'W75',sh:null,sa:null,st:'upcoming',venue:'Lincoln Financial Field, Philadelphia',scorers:'',yt:''},
+  {id:'R16-3',group:'KO',utc:1783267200,home:'W76',away:'W78',sh:null,sa:null,st:'upcoming',venue:'Hard Rock Stadium, Miami Gardens',scorers:'',yt:''},
+  {id:'R16-4',group:'KO',utc:1783281600,home:'W79',away:'W80',sh:null,sa:null,st:'upcoming',venue:'AT&T Stadium, Arlington',scorers:'',yt:''},
+  {id:'R16-5',group:'KO',utc:1783353600,home:'W83',away:'W84',sh:null,sa:null,st:'upcoming',venue:'SoFi Stadium, Inglewood',scorers:'',yt:''},
+  {id:'R16-6',group:'KO',utc:1783368000,home:'W81',away:'W82',sh:null,sa:null,st:'upcoming',venue:'NRG Stadium, Houston',scorers:'',yt:''},
+  {id:'R16-7',group:'KO',utc:1783440000,home:'W86',away:'W88',sh:null,sa:null,st:'upcoming',venue:'Mercedes-Benz Stadium, Atlanta',scorers:'',yt:''},
+  {id:'R16-8',group:'KO',utc:1783454400,home:'W85',away:'W87',sh:null,sa:null,st:'upcoming',venue:'BC Place, Vancouver',scorers:'',yt:''},
+  {id:'QF-1',group:'KO',utc:1783612800,home:'W89',away:'W90',sh:null,sa:null,st:'upcoming',venue:'MetLife Stadium, East Rutherford',scorers:'',yt:''},
+  {id:'QF-2',group:'KO',utc:1783699200,home:'W93',away:'W94',sh:null,sa:null,st:'upcoming',venue:'Estadio Azteca, Mexico City',scorers:'',yt:''},
+  {id:'QF-3',group:'KO',utc:1783785600,home:'W91',away:'W92',sh:null,sa:null,st:'upcoming',venue:'Gillette Stadium, Foxborough',scorers:'',yt:''},
+  {id:'QF-4',group:'KO',utc:1783800000,home:'W95',away:'W96',sh:null,sa:null,st:'upcoming',venue:'Lumen Field, Seattle',scorers:'',yt:''},
+  {id:'SF-1',group:'KO',utc:1784044800,home:'W97',away:'W98',sh:null,sa:null,st:'upcoming',venue:'Levis Stadium, Santa Clara',scorers:'',yt:''},
+  {id:'SF-2',group:'KO',utc:1784131200,home:'W99',away:'W100',sh:null,sa:null,st:'upcoming',venue:'AT&T Stadium, Arlington',scorers:'',yt:''},
+  {id:'3RD',group:'KO',utc:1784390400,home:'L101',away:'L102',sh:null,sa:null,st:'upcoming',venue:'Hard Rock Stadium, Miami Gardens',scorers:'',yt:''},
+  {id:'FINAL',group:'KO',utc:1784473200,home:'W101',away:'W102',sh:null,sa:null,st:'upcoming',venue:'MetLife Stadium, East Rutherford',scorers:'',yt:''},
 ];
 
 // MATCH_STATS_DB sengaja dikosongkan — fitur kartu kuning/merah, xG, possession,
@@ -1987,60 +2022,113 @@ function resolveBestThird(slot, st){
 
 function renderBracket(){
   // ════════════════════════════════════════════════════════════════════
-  // BRACKET VISUAL H-SHAPE — layout kiri/kanan menuju trofi di tengah,
-  // sesuai bracket resmi FIFA. 8 match kiri, 8 match kanan, urutan
-  // mengikuti infografis resmi (Jerman-Paraguay paling atas kiri, dst).
+  // BRACKET VISUAL LENGKAP — Round of 32 sampai FINAL.
+  // Match knockout (group='KO') menyimpan referensi pemenang/kalah
+  // (mis. 'W74' = pemenang match R32 nomor 74, 'L101' = yang kalah di
+  // match SF nomor 101). Fungsi ini me-resolve referensi itu jadi nama
+  // tim asli berdasarkan hasil pertandingan sebelumnya yang sudah ada.
   // ════════════════════════════════════════════════════════════════════
   const r32 = MATCHES.filter(m=>m.group==='R32');
-  const find = (h,a) => r32.find(m =>
-    (m.home===h && m.away===a) || (m.home===a && m.away===h)
-  );
+  const ko  = MATCHES.filter(m=>m.group==='KO');
 
-  // Urutan resmi sesuai bracket FIFA: kiri 8, kanan 8
-  const leftOrder  = [['Germany','Paraguay'],['France','Sweden'],['South Africa','Canada'],['Netherlands','Morocco'],
-                      ['Portugal','Croatia'],['Spain','Austria'],['USA','Bosnia & Herz'],['Belgium','Senegal']];
-  const rightOrder = [['Brazil','Japan'],['Ivory Coast','Norway'],['Mexico','Ecuador'],['England','DR Congo'],
-                       ['Argentina','Cape Verde'],['Australia','Egypt'],['Switzerland','Algeria'],['Colombia','Ghana']];
+  // Pemetaan nomor match resmi FIFA (73-104) -> match ID di app
+  const NUM_TO_ID = {
+    73:'R32-1',74:'R32-3',75:'R32-4',76:'R32-2',77:'R32-6',78:'R32-5',79:'R32-7',80:'R32-8',
+    81:'R32-10',82:'R32-9',83:'R32-12',84:'R32-11',85:'R32-13',86:'R32-15',87:'R32-16',88:'R32-14',
+    89:'R16-1',90:'R16-2',91:'R16-3',92:'R16-4',93:'R16-5',94:'R16-6',95:'R16-7',96:'R16-8',
+    97:'QF-1',98:'QF-2',99:'QF-3',100:'QF-4',
+    101:'SF-1',102:'SF-2',103:'3RD',104:'FINAL'
+  };
+  function findMatchByNum(num){
+    const id = NUM_TO_ID[num];
+    return MATCHES.find(m=>m.id===id);
+  }
+  // Resolve 'W74' / 'L101' jadi {name, flag, resolved} berdasarkan hasil match tsb
+  function resolveRef(ref){
+    const m = ref.match(/^([WL])(\d+)$/);
+    if(!m) return {name:ref, flag:'', resolved:true}; // sudah nama tim asli
+    const type = m[1], num = parseInt(m[2]);
+    const src = findMatchByNum(num);
+    if(!src || src.st!=='done' || src.sh===null) return {name:`${type==='W'?'Winner':'Loser'} M${num}`, flag:'', resolved:false};
+    const homeWins = src.sh > src.sa;
+    const winner = homeWins ? src.home : src.away;
+    const loser = homeWins ? src.away : src.home;
+    const result = type==='W' ? winner : loser;
+    return {name:result, flag:flag(result), resolved:true};
+  }
+  function getDisplay(m){
+    const h = resolveRef(m.home), a = resolveRef(m.away);
+    return {home:h, away:a, sh:m.sh, sa:m.sa, st:m.st, utc:m.utc, id:m.id};
+  }
 
-  function renderSide(pairs, side){
-    let h = `<div class="brkv-side ${side}">`;
-    for(const [t1,t2] of pairs){
-      const m = find(t1,t2);
-      if(!m){ h += `<div class="brkv-match"><div class="brkv-teams"><div class="brkv-team"><span class="bv-flag">🏳</span><span class="bv-name">${t1}</span></div><div class="brkv-team"><span class="bv-flag">🏳</span><span class="bv-name">${t2}</span></div></div></div>`; continue; }
-      const isDone = m.st==='done';
-      const isLive = m.st==='live';
-      const homeWin = isDone && m.sh>m.sa;
-      const awayWin = isDone && m.sa>m.sh;
-      const tf = fmtTime(m.utc);
-      h += `<div class="brkv-match" onclick="openMatchModal('${m.id}')" style="cursor:pointer">
-        <div class="brkv-teams">
-          <div class="brkv-team${homeWin?' winner':''}${isLive?' live':''}">
-            <span class="bv-flag">${flag(m.home)}</span>
-            <span class="bv-name">${m.home}</span>
-            <span class="bv-score">${m.sh!==null?m.sh:''}</span>
-          </div>
-          <div class="brkv-team${awayWin?' winner':''}${isLive?' live':''}">
-            <span class="bv-flag">${flag(m.away)}</span>
-            <span class="bv-name">${m.away}</span>
-            <span class="bv-score">${m.sa!==null?m.sa:''}</span>
-          </div>
+  const allMatches = {};
+  for(const m of [...r32, ...ko]) allMatches[m.id]=getDisplay(m);
+
+  // Urutan resmi bracket kiri/kanan sampai final
+  const leftR32  = ['R32-3','R32-6','R32-1','R32-4','R32-12','R32-11','R32-10','R32-9'];
+  const rightR32 = ['R32-2','R32-5','R32-7','R32-8','R32-15','R32-14','R32-13','R32-16'];
+  const leftR16  = ['R16-1','R16-2','R16-3','R16-4'];
+  const rightR16 = ['R16-5','R16-6','R16-7','R16-8'];
+  const leftQF   = ['QF-1','QF-2'];
+  const rightQF  = ['QF-3','QF-4'];
+  const leftSF   = ['SF-1'];
+  const rightSF  = ['SF-2'];
+
+  function matchCard(id){
+    const m = allMatches[id];
+    if(!m) return '';
+    const isDone = m.st==='done';
+    const isLive = m.st==='live';
+    const homeWin = isDone && m.sh>m.sa;
+    const awayWin = isDone && m.sa>m.sh;
+    const tf = m.utc ? fmtTime(m.utc) : null;
+    const statusLine = isDone?'✅ Final':isLive?'<span class="brkv-status-live">🔴 LIVE</span>':(tf?tf.date+' · '+tf.time:'TBD');
+    return `<div class="brkv-match" onclick="openMatchModal('${id}')" style="cursor:pointer">
+      <div class="brkv-teams">
+        <div class="brkv-team${homeWin?' winner':''}${isLive?' live':''}">
+          <span class="bv-flag">${m.home.flag||'🏳'}</span>
+          <span class="bv-name">${m.home.name}</span>
+          <span class="bv-score">${m.sh!==null?m.sh:''}</span>
+        </div>
+        <div class="brkv-team${awayWin?' winner':''}${isLive?' live':''}">
+          <span class="bv-flag">${m.away.flag||'🏳'}</span>
+          <span class="bv-name">${m.away.name}</span>
+          <span class="bv-score">${m.sa!==null?m.sa:''}</span>
         </div>
       </div>
-      <div class="brkv-time">${isDone?'✅ Final':isLive?'<span class=\'brkv-status-live\'>🔴 LIVE</span>':tf.date+' · '+tf.time}</div>`;
-    }
+    </div>
+    <div class="brkv-time">${statusLine}</div>`;
+  }
+
+  function renderColumn(ids, label){
+    let h = `<div class="brkv-side col">`;
+    if(label) h += `<div class="brkv-col-label">${label}</div>`;
+    for(const id of ids) h += matchCard(id);
     h += '</div>';
     return h;
   }
 
-  let html = `<div class="brkv-wrap"><div class="brkv-grid">`;
-  html += renderSide(leftOrder, 'left');
-  html += `<div class="brkv-center">
+  let html = `<div class="brkv-wrap"><div class="brkv-grid-full">`;
+  // Kolom kiri: R32 -> R16 -> QF -> SF
+  html += renderColumn(leftR32, 'Round of 32');
+  html += renderColumn(leftR16, 'Round of 16');
+  html += renderColumn(leftQF, 'Quarter-final');
+  html += renderColumn(leftSF, 'Semi-final');
+  // Tengah: Final + trofi
+  html += `<div class="brkv-center-final">
     <div class="brkv-trophy">🏆</div>
-    <div class="brkv-title">KNOCKOUT<br>ROUND<br>WC 2026</div>
+    <div class="brkv-title">FINAL</div>
+    ${matchCard('FINAL')}
+    <div class="brkv-3rd-label">🥉 Third Place</div>
+    ${matchCard('3RD')}
   </div>`;
-  html += renderSide(rightOrder, 'right');
+  // Kolom kanan: SF -> QF -> R16 -> R32
+  html += renderColumn(rightSF, 'Semi-final');
+  html += renderColumn(rightQF, 'Quarter-final');
+  html += renderColumn(rightR16, 'Round of 16');
+  html += renderColumn(rightR32, 'Round of 32');
   html += `</div></div>`;
-  html += `<div class="info-box" style="margin:12px 13px 0">✅ Round of 32 bracket is <strong>official and final</strong> (confirmed 28 Jun 2026). Tap any match for details.</div>`;
+  html += `<div class="info-box" style="margin:12px 13px 0">✅ Round of 32 is official and final. Later rounds auto-fill as winners are confirmed. Tap any match for details.</div>`;
 
   document.getElementById('brkOut').innerHTML = html;
 }
